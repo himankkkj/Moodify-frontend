@@ -1,0 +1,204 @@
+.how {
+  position: relative;
+  min-height: 300vh;
+  background: var(--color-bg);
+
+  // ── STICKY PANEL ──────────────────────────
+  &__sticky {
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0 5rem;
+    overflow: hidden;
+  }
+
+  // ── TOP HEADING ───────────────────────────
+  &__heading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2.5rem 0 2rem;
+    border-bottom: 1px solid rgba(10, 10, 10, 0.1);
+
+    h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      letter-spacing: 0.08em;
+      color: var(--color-text);
+
+      .accent { color: var(--color-accent) }
+    }
+  }
+
+  // ── 3 COLUMN LAYOUT ───────────────────────
+  &__layout {
+    display: grid;
+    perspective: 1000px;
+    grid-template-columns: 120px 1fr 1fr;
+    gap: 3rem;
+    flex: 1;
+    align-items: center;
+    padding: 2rem 0;
+  }
+
+  // ── LEFT — big number ─────────────────────
+  &__left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
+    height: 100%;
+    padding-top: 1rem;
+  }
+
+  &__big-number {
+    font-family: var(--font-heading);
+    font-size: clamp(6rem, 10vw, 10rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: rgba(200, 16, 46, 0.08);
+    display: block;
+  }
+
+  // ── PROGRESS BAR ──────────────────────────
+  &__progress-track {
+    width: 1px;
+    height: 180px;
+    background: rgba(10, 10, 10, 0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  &__progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-accent);
+    transform-origin: top;
+    transform: scaleY(0.33);
+  }
+
+  // ── CENTER — image ────────────────────────
+  &__center {
+    position: relative;
+    height: 70vh;
+    overflow: hidden;
+    border-radius: 12px;
+
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+
+  &__image-wrap {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: inset(0 0 0 0);
+    opacity: 0;
+
+    &--base {
+      filter: grayscale(0.8) sepia(0.2);
+    }
+
+    &--color {
+      filter: none;
+      clip-path: circle(0px at 50% 50%);
+    }
+  }
+
+  // ── RIGHT — title + desc ──────────────────
+  &__right {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3rem;
+    height: 70vh;
+    padding: 1rem 0;
+  }
+
+  // ── CIRCULAR TEXT ─────────────────────────
+  &__circular {
+  position: absolute;
+  bottom: 20rem;    // ← move it down
+  right: 10rem;      // ← keep it right
+  z-index: 10;
+  opacity: 0.8;
+}
+
+  // ── TITLES stacked ────────────────────────
+  &__titles {
+    min-height: 150px;
+    position: relative;
+    z-index: 1;
+    flex: none;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  &__title {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: 0.03em;
+    color: var(--color-text);
+    opacity: 0;
+  }
+
+  // ── DESCS stacked ─────────────────────────
+  &__descs {
+    position: relative;
+    z-index: 1;
+    height: 120px;
+    border-top: 1px solid rgba(10, 10, 10, 0.1);
+    padding-top: 1.5rem;
+  }
+
+  &__desc {
+    position: absolute;
+    z-index: 1;
+    top: 1.5rem;
+    left: 0;
+    font-family: var(--font-body);
+    font-size: clamp(0.9rem, 1.1vw, 1.05rem);
+    font-weight: 400;
+    line-height: 1.8;
+    color: #666666;
+    max-width: 38ch;
+    opacity: 0;
+  }
+
+  // ── INVISIBLE SCROLL TRIGGERS ─────────────
+  &__triggers {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 1px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__step-trigger {
+    flex: 1;
+    min-height: 100vh;
+  }
+}

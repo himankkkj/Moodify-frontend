@@ -1,0 +1,104 @@
+// ─── FONTS ───────────────────────────────────────
+@import '@fontsource/bebas-neue/index.css';
+@import '@fontsource/inter/index.css';
+// ─── CSS VARIABLES ───────────────────────────────
+:root {
+  // Colors
+  --color-bg:          #F5F0E8;
+  --color-text:        #0A0A0A;
+  --color-accent:      #C8102E;
+  --color-secondary:   #888888;
+  --color-white:       #FFFFFF;
+
+  // Fonts
+  --font-heading:      'Bebas Neue', sans-serif;
+  --font-body:         'Inter', sans-serif;
+
+  // Font sizes
+  --fs-hero:           clamp(4rem, 12vw, 12rem);
+  --fs-h1:             clamp(2.5rem, 6vw, 6rem);
+  --fs-h2:             clamp(2rem, 4vw, 4rem);
+  --fs-h3:             clamp(1.2rem, 2vw, 2rem);
+  --fs-body:           clamp(0.9rem, 1.2vw, 1.1rem);
+  --fs-small:          0.8rem;
+
+  // Spacing
+  --space-xs:          0.5rem;
+  --space-sm:          1rem;
+  --space-md:          2rem;
+  --space-lg:          4rem;
+  --space-xl:          8rem;
+
+  // Transitions
+  --transition-fast:   0.2s ease;
+  --transition-mid:    0.4s ease;
+  --transition-slow:   0.8s ease;
+}
+
+// ─── RESET ───────────────────────────────────────
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto; // lenis handles this
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+// ─── TYPOGRAPHY ──────────────────────────────────
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+p {
+  font-family: var(--font-body);
+  color: var(--color-secondary);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+}
+
+// ─── UTILITY CLASSES ─────────────────────────────
+.accent {
+  color: var(--color-accent);
+}
+
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--space-md);
+}
+
+.section {
+  padding: var(--space-xl) 0;
+}
+

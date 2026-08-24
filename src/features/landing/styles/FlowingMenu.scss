@@ -1,0 +1,141 @@
+.menu-wrap {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.menu__item {
+  flex: 1;                     /* GSAP will override flex-grow on hover */
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  border-top: 1px solid;
+  transition: border-color 0s; /* let JS handle timing */
+}
+
+.menu__item:first-child {
+  border-top: none;
+}
+
+.menu__item-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;   /* pushes arrow to the far right */
+  padding: 0 48px 0 64px;           /* left matches header, right gives arrow room */
+  height: 100%;
+  position: relative;
+  cursor: pointer;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  font-weight: 700;
+  font-size: clamp(2rem, 5vh, 4rem);
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.04em;
+}
+
+/* Gesture hint icon — sits between label and arrow */
+.menu__item-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: 20px;
+  flex-shrink: 0;
+  opacity: 01;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  color: inherit;
+}
+
+.menu__item:hover .menu__item-hint {
+  opacity: 0;
+  transform: translateX(6px);
+}
+
+/* Subtle arrow affordance — signals interactivity without screaming */
+.menu__item-link::after {
+  content: '→';
+  font-size: 2.5vh;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-weight: 300;
+  opacity: 0.4;                 /* was 0.2 — too invisible, now actually usable */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  transform: translateX(0);
+  flex-shrink: 0;
+}
+
+.menu__item:hover .menu__item-link::after {
+  opacity: 0;                   /* fades out as the marquee slides in */
+  transform: translateX(8px);
+}
+
+.menu__item-link:hover,
+.menu__item-link:focus:not(:focus-visible) {
+  color: inherit;
+}
+
+/* ── Marquee overlay ── slides in from top or bottom on hover ─────────────── */
+.marquee {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform: translate3d(0, 101%, 0);
+}
+
+.marquee__inner-wrap {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.marquee__inner {
+  display: flex;
+  align-items: center;
+  position: relative;
+  height: 100%;
+  width: fit-content;
+  will-change: transform;
+}
+
+.marquee__part {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.marquee span {
+  white-space: nowrap;
+  text-transform: uppercase;
+  font-weight: 400;
+  font-size: clamp(2rem, 5vh, 4rem);
+  font-family: 'Oswald', sans-serif;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  padding: 0 1.5vw;
+}
+
+/* ── Monkey image pill ──────────────────────────────────────────────────────── */
+.marquee__img {
+  width: 300px;
+  height: 120px;
+  margin: 0 2.5vw;
+  border-radius: 80px;          /* pill shape */
+  background-size: cover;
+  background-position: center 50%;
+  background-repeat: no-repeat;
+  flex-shrink: 0;
+  align-self: center;
+  overflow: hidden;             /* clips the scale so it stays inside the pill */
+}

@@ -1,0 +1,124 @@
+// ─── GestureSection ──────────────────────────────────────────────────────────
+
+.gesture-section {
+  background-color: #0a0a0a;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #2a2a2a; // closes the section before cream below
+
+  // ── Two-column header ───────────────────────────────────────────────────────
+  &__header {
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center; // vertically center both columns
+    gap: 0;
+    padding: 64px 64px 40px;
+    border-bottom: 1px solid #2a2a2a;
+
+    &::before {
+      content: 'HANDS';
+      position: absolute;
+      bottom: -40px;
+      right: -16px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 22vw;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #ffffff;
+      opacity: 0.04;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+      z-index: 0;
+    }
+  }
+
+  &__header-left,
+  &__header-right {
+    position: relative;
+    z-index: 1;
+  }
+
+  &__header-left {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-right: 48px;
+  }
+
+  &__header-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column; // stack: description on top, count below
+    align-items: flex-start;
+    gap: 14px;
+    padding-left: 48px;
+    border-left: 1px solid #2a2a2a;
+  }
+
+  // ── Eyebrow ─────────────────────────────────────────────────────────────────
+  &__eyebrow {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #c8102e;
+  }
+
+  // ── Main heading ─────────────────────────────────────────────────────────────
+  &__heading {
+    font-family: var(--font-heading);
+    font-size: clamp(2.4rem, 4.5vw, 4rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    margin: 0;
+    overflow: hidden;
+
+    &--light {
+      color: #f5f0e8;
+    }
+    &--accent {
+      color: #c8102e;
+    }
+  }
+
+  // ── Right column ────────────────────────────────────────────────────────────
+  &__desc {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #999999;
+    margin: 0;
+    max-width: 480px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__count {
+    font-family: var(--font-heading);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #666666; // was #3A3A3A (~2.1:1) → now visible
+    white-space: nowrap;
+  }
+
+  // ── Flowing Menu container ───────────────────────────────────────────────────
+  &__menu {
+    flex: 1;
+    min-height: 300px;
+    position: relative;
+    isolation: isolate;
+  }
+}

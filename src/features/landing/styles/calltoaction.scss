@@ -1,0 +1,172 @@
+@keyframes cta-vinyl-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.cta {
+  position: relative;
+  min-height: 100vh;             // full viewport height
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--color-bg);
+  border-top: 1px solid rgba(10, 10, 10, 0.1);
+  overflow: hidden;
+
+  // ── TWO-COLUMN INNER ────────────────────────────────────────────────────
+  &__inner {
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  // ── LEFT: text — wider so heading stays large ──────────────────────────
+  &__content {
+    flex: 0 0 55%;
+    position: relative;
+    z-index: 2;
+  }
+
+  // ── HEADING — restored to original proportions ─────────────────────────
+  &__heading {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-heading);
+    font-size: var(--fs-hero);    // same variable as before — nothing changed here
+    line-height: 0.9;
+    letter-spacing: -0.01em;
+
+    span {
+      display: block;             // needed for clip-path animation
+      color: var(--color-text);
+    }
+
+    .accent { color: var(--color-accent); }
+  }
+
+  // ── SUB TEXT ───────────────────────────────────────────────────────────
+  &__sub {
+    margin-top: 2.5rem;
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    font-weight: 300;
+    color: var(--color-secondary);
+    letter-spacing: 0.02em;
+  }
+
+  // ── BUTTON ─────────────────────────────────────────────────────────────
+  &__btn {
+    display: inline-block;
+    margin-top: 3rem;
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    letter-spacing: 0.1em;
+    color: var(--color-bg);
+    background: var(--color-text);
+    padding: 1.2rem 3rem;
+    border: 1px solid var(--color-text);
+    position: relative;
+    z-index: 2;
+    transition: all 0.25s ease;
+
+    &:hover {
+      background: var(--color-accent);
+      border-color: var(--color-accent);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(200, 16, 46, 0.3);
+    }
+  }
+
+  // ── RIGHT: VINYL SCENE ─────────────────────────────────────────────────
+  &__vinyl-scene {
+    flex: 1;
+    position: relative;
+    height: 440px;
+    overflow: visible;
+  }
+
+  // Album cover — RIGHT side of scene, front z-index
+  &__album {
+    position: absolute;
+    right: -2rem;                     // album sits slightly off the right edge of scene
+    top: 35%;
+    transform: translateY(-50%);
+    width: 400px;
+    height: 400px;
+    z-index: 2;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow:
+      0 20px 60px rgba(0, 0, 0, 0.25),
+      0 8px 20px rgba(0, 0, 0, 0.15);
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  // Vinyl wrap — handles translateX (slide LEFT on hover)
+  // Initially behind album, peeking out from album's LEFT edge
+  &__vinyl-wrap {
+    position: absolute;
+    right: -10px;                  // sits behind album, 180px peeking left
+    top: 35%;
+    transform: translateY(-50%) translateX(0);
+    width: 360px;
+    height: 360px;
+    z-index: 1;
+    border-radius: 50%;
+    transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(-12px 20px 40px rgba(0, 0, 0, 0.4));
+  }
+
+  // Vinyl spin — handles rotation only (no translation conflict)
+  &__vinyl-spin {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    animation: cta-vinyl-spin 4s linear infinite;
+    animation-play-state: paused;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+      display: block;
+      mix-blend-mode: multiply;    // removes the white PNG background on cream
+    }
+  }
+
+  // ── Hover: vinyl slides LEFT, spin starts ──────────────────────────────
+  &__vinyl-scene:hover &__vinyl-wrap {
+    transform: translateY(-50%) translateX(-210px);
+  }
+
+  &__vinyl-scene:hover &__vinyl-spin {
+    animation-play-state: running;
+  }
+
+  // ── BG TEXT ────────────────────────────────────────────────────────────
+  &__bg-text {
+    position: absolute;
+    bottom: -2rem;
+    right: -1rem;
+    font-family: var(--font-heading);
+    font-size: clamp(8rem, 20vw, 20rem);
+    line-height: 1;
+    color: rgba(10, 10, 10, 0.04);
+    letter-spacing: -0.02em;
+    user-select: none;
+    pointer-events: none;
+    z-index: 1;
+  }
+}
