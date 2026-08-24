@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 
 const DitherCursor = ({
   ditherSize = 6,
-  radius = 0.05,
+  radius = 0.04,
   exponent = 2.0,
   decay = 0.015,
   color = "#C8102E",

@@ -115,7 +115,7 @@
     }
 
     &--color {
-      filter: none;
+      filter: saturate(1.5) brightness(1.08);
       clip-path: circle(0px at 50% 50%);
     }
   }

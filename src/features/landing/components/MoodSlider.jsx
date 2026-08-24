@@ -3,16 +3,23 @@ import clickSrc from '../../../assets/sounds/hover.wav'
 
 // Pool of 3 instances — rapid hover rotates through them
 // so each sound plays fully without cutting the previous
-const POOL_SIZE = 3
-const audioPool = Array.from({ length: POOL_SIZE }, () => {
-  const audio = new Audio(clickSrc)
-  audio.volume = 0.35
-  return audio
-})
+let audioPool = null
 let poolIndex = 0
 
+const getPool = () => {
+  if (!audioPool) {
+    audioPool = Array.from({ length: 3 }, () => {
+      const audio = new Audio(clickSrc)
+      audio.volume = 0.35
+      return audio
+    })
+  }
+  return audioPool
+}
+
 const playClick = () => {
-  const audio = audioPool[poolIndex % POOL_SIZE]
+  const pool = getPool()
+  const audio = pool[poolIndex % 3]
   audio.currentTime = 0
   audio.play().catch(() => {})
   poolIndex++

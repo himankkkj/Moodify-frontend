@@ -1,28 +1,34 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import '../../shared/styles/navbar.scss'
 
 const Navbar = () => {
-  const [hidden, setHidden] = useState(false)
-  const [atTop, setAtTop] = useState(true)
-  const lastScrollY = useRef(0)
+  const navRef       = useRef(null)
+  const lastScrollY  = useRef(0)
 
   useEffect(() => {
+    const nav = navRef.current
+    if (!nav) return
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY
 
-      // at top of page
-      setAtTop(currentScrollY < 50)
+      // at top
+      nav.classList.toggle('navbar--top',      currentScrollY < 50)
+      nav.classList.toggle('navbar--scrolled', currentScrollY >= 50)
 
-      // hide on scroll down, show on scroll up
+      // hide / show
       if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
-        setHidden(true)
+        nav.classList.add('navbar--hidden')
       } else {
-        setHidden(false)
+        nav.classList.remove('navbar--hidden')
       }
 
       lastScrollY.current = currentScrollY
     }
+
+    // set initial state without triggering scroll
+    nav.classList.add('navbar--top')
 
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
@@ -34,7 +40,7 @@ const Navbar = () => {
   }
 
   return (
-    <nav className={`navbar ${hidden ? 'navbar--hidden' : ''} ${atTop ? 'navbar--top' : 'navbar--scrolled'}`}>
+    <nav className="navbar navbar--top" ref={navRef}>
 
       {/* LEFT — nav links */}
       <div className="navbar__left">

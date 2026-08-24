@@ -1,17 +1,24 @@
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useState, useLayoutEffect, useMemo, useRef } from 'react';
 import '../styles/driftwall.scss';
 import clickSrc from '../../../assets/sounds/hover.wav';
 
-const POOL_SIZE = 3;
-const clickPool = Array.from({ length: POOL_SIZE }, () => {
-  const audio = new Audio(clickSrc);
-  audio.volume = 0.3;
-  return audio;
-});
+let clickPool = null;
 let clickPoolIndex = 0;
 
+const getClickPool = () => {
+  if (!clickPool) {
+    clickPool = Array.from({ length: 3 }, () => {
+      const audio = new Audio(clickSrc);
+      audio.volume = 0.3;
+      return audio;
+    });
+  }
+  return clickPool;
+};
+
 const playClick = () => {
-  const audio = clickPool[clickPoolIndex % POOL_SIZE];
+  const pool = getClickPool();
+  const audio = pool[clickPoolIndex % 3];
   audio.currentTime = 0;
   audio.play().catch(() => {});
   clickPoolIndex++;
@@ -64,7 +71,6 @@ const DriftWall = ({
   const lastTsRef = useRef(null);
 
   const [containerHeight, setContainerHeight] = useState(600);
-  const [activeId, setActiveId] = useState(null);
   const activeIdRef = useRef(null);
   const [reduced, setReduced] = useState(false);
 
@@ -178,15 +184,30 @@ const DriftWall = ({
   const activate = useCallback((id, index) => {
     if (id === activeIdRef.current) return;
     playClick();
+
+    if (activeIdRef.current) {
+      const prev = containerRef.current?.querySelector(
+        `[data-tile-id="${activeIdRef.current}"]`
+      );
+      prev?.classList.remove('is-active');
+    }
+
+    const next = containerRef.current?.querySelector(`[data-tile-id="${id}"]`);
+    next?.classList.add('is-active');
+
     activeIdRef.current = id;
     hoveredColRef.current = index;
-    setActiveId(id);
   }, []);
 
   const release = useCallback(() => {
+    if (activeIdRef.current) {
+      const prev = containerRef.current?.querySelector(
+        `[data-tile-id="${activeIdRef.current}"]`
+      );
+      prev?.classList.remove('is-active');
+    }
     activeIdRef.current = null;
     hoveredColRef.current = -1;
-    setActiveId(null);
   }, []);
 
   const handlePointerMove = useCallback(
@@ -239,7 +260,7 @@ const DriftWall = ({
       </span>
     );
     const commonProps = {
-      className: `drift-wall__tile${activeId === id ? ' is-active' : ''}`,
+      className: 'drift-wall__tile',
       'data-tile-id': id,
       'data-col': colIndex,
       onFocus: () => activate(id, colIndex),

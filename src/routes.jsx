@@ -1,25 +1,44 @@
-import {createBrowserRouter} from "react-router-dom";
-import Register from "./features/auth/pages/Register.jsx";
-import Login from "./features/auth/pages/Login.jsx";
-import Verification from "./features/auth/pages/Verification.jsx";
-import Landing from "./features/landing/pages/Landing.jsx"
+import { createBrowserRouter } from "react-router-dom";
+import { lazy, Suspense } from "react";
 
-export const routes =  createBrowserRouter([
-    
-    {
-        path: "/register",
-        element: <Register />
-    },
-    {
-        path: "/login",
-        element: <Login />
-    },
-    {
-        path: "/verification",
-        element: <Verification />
-    },
-    {
-        path: "/",
-        element: <Landing /> 
-    },
-])
+const Register = lazy(() => import("./features/auth/pages/Register.jsx"));
+const Login = lazy(() => import("./features/auth/pages/Login.jsx"));
+const Verification = lazy(
+  () => import("./features/auth/pages/Verification.jsx"),
+);
+const Landing = lazy(() => import("./features/landing/pages/Landing.jsx"));
+
+export const routes = createBrowserRouter([
+  {
+    path: "/",
+    element: (
+      <Suspense fallback={null}>
+        <Landing />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/login",
+    element: (
+      <Suspense fallback={null}>
+        <Login />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/register",
+    element: (
+      <Suspense fallback={null}>
+        <Register />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/verification",
+    element: (
+      <Suspense fallback={null}>
+        <Verification />
+      </Suspense>
+    ),
+  },
+]);

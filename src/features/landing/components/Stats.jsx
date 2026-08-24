@@ -11,38 +11,35 @@ const stats = [
   { value: 95,     suffix: '%', label: 'DETECTION ACCURACY' },
 ]
 
-// count up hook
-const useCountUp = (target, duration = 2, start = false) => {
-  const [count, setCount] = useState(0)
+// single stat item
+const StatItem = ({ value, suffix, label, triggered }) => {
+  const valueRef = useRef(null)
+
+  const format = (n) => {
+    if (n >= 1000) return Math.floor(n / 1000) + 'K'
+    return Math.floor(n)
+  }
 
   useEffect(() => {
-    if (!start) return
+    if (!triggered || !valueRef.current) return
 
     const obj = { val: 0 }
     gsap.to(obj, {
-      val: target,
-      duration,
+      val: value,
+      duration: 2,
       ease: 'power2.out',
-      onUpdate: () => setCount(Math.floor(obj.val))
+      onUpdate: () => {
+        if (valueRef.current) {
+          valueRef.current.textContent = format(obj.val) + suffix
+        }
+      }
     })
-  }, [start, target, duration])
-
-  return count
-}
-
-// single stat item
-const StatItem = ({ value, suffix, label, triggered }) => {
-  const count = useCountUp(value, 2, triggered)
-
-  const format = (n) => {
-    if (n >= 1000) return (n / 1000).toFixed(0) + 'K'
-    return n
-  }
+  }, [triggered])
 
   return (
     <div className="stats__item">
-      <span className="stats__value">
-        {format(count)}{suffix}
+      <span className="stats__value" ref={valueRef}>
+        0{suffix}
       </span>
       <div className="stats__divider" />
       <span className="stats__label">{label}</span>

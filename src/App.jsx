@@ -6,16 +6,23 @@ import DitherCursor from './features/shared/components/DitherCursor'
 import hoverSrc from './assets/sounds/click.wav'
 
 // ── Audio pool — handles rapid sequential hovers cleanly ──────────────────
-const POOL_SIZE = 4
-const hoverPool = Array.from({ length: POOL_SIZE }, () => {
-  const a = new Audio(hoverSrc)
-  a.volume = 1  
-  return a
-})
+let hoverPool = null
 let hoverIdx = 0
 
+const getHoverPool = () => {
+  if (!hoverPool) {
+    hoverPool = Array.from({ length: 4 }, () => {
+      const a = new Audio(hoverSrc)
+      a.volume = 0.2
+      return a
+    })
+  }
+  return hoverPool
+}
+
 const playHover = () => {
-  const a = hoverPool[hoverIdx % POOL_SIZE]
+  const pool = getHoverPool()
+  const a = pool[hoverIdx % 4]
   a.currentTime = 0
   a.play().catch(() => {})
   hoverIdx++
