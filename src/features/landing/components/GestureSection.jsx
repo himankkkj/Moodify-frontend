@@ -4,10 +4,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import FlowingMenu from './FlowingMenu';
 
-import nextSongImg   from '../../../assets/images/gestures/next-song.png';
-import playPauseImg  from '../../../assets/images/gestures/play-pause.png';
-import previousImg   from '../../../assets/images/gestures/previous.png';
-import volumeUpImg   from '../../../assets/images/gestures/volume-up.png';
+import nextSongImg   from '../../../assets/images/gestures/next-song.webp';
+import playPauseImg  from '../../../assets/images/gestures/play-pause.webp';
+import previousImg   from '../../../assets/images/gestures/previous.webp';
+import volumeUpImg   from '../../../assets/images/gestures/volume-up.webp';
 
 import '../styles/gesturesection.scss';
 

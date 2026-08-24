@@ -4,9 +4,15 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import '../styles/howitworks.scss'
 
-import step1 from '../../../assets/images/howitworks/step1.png'
-import step2 from '../../../assets/images/howitworks/step2.png'
-import step3 from '../../../assets/images/howitworks/step3.png'
+import step1_800  from '../../../assets/images/howitworks/step1-800.webp'
+import step1_1100 from '../../../assets/images/howitworks/step1-1100.webp'
+import step1_1400 from '../../../assets/images/howitworks/step1-1400.webp'
+import step2_800  from '../../../assets/images/howitworks/step2-800.webp'
+import step2_1100 from '../../../assets/images/howitworks/step2-1100.webp'
+import step2_1400 from '../../../assets/images/howitworks/step2-1400.webp'
+import step3_800  from '../../../assets/images/howitworks/step3-800.webp'
+import step3_1100 from '../../../assets/images/howitworks/step3-1100.webp'
+import step3_1400 from '../../../assets/images/howitworks/step3-1400.webp'
 import flipSoundSrc from '../../../assets/sounds/page-flip.wav'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -19,19 +25,25 @@ const steps = [
     number: '01',
     title: 'LOOK AT\nCAMERA',
     desc: 'Allow camera access once. No photos saved, no data stored. Everything happens live in your browser.',
-    image: step1
+    image: step1_1400,
+    image1100: step1_1100,
+    image800: step1_800,
   },
   {
     number: '02',
     title: 'WE READ\nYOUR MOOD',
     desc: 'face-api.js detects your expression instantly — happy, sad, angry, surprised and more.',
-    image: step2
+    image: step2_1400,
+    image1100: step2_1100,
+    image800: step2_800,
   },
   {
     number: '03',
     title: 'MUSIC\nPLAYS',
     desc: 'Last.fm finds the perfect tracks for your mood. Music starts playing automatically.',
-    image: step3
+    image: step3_1400,
+    image1100: step3_1100,
+    image800: step3_800,
   }
 ]
 
@@ -263,21 +275,34 @@ const HowItWorks = () => {
           >
             {steps.map((step, i) => (
               <Fragment key={i}>
-                <img
-                  src={step.image}
-                  alt={step.title}
-                  className="how__image how__image--base"
-                  ref={el => imagesRef.current[i] = el}
-                  style={{ opacity: i === 0 ? 1 : 0 }}
-                />
-                <img
-                  src={step.image}
-                  alt=""
-                  aria-hidden="true"
-                  className="how__image how__image--color"
-                  ref={el => colorImagesRef.current[i] = el}
-                  style={{ opacity: i === 0 ? 1 : 0, clipPath: 'circle(0px at 50% 50%)' }}
-                />
+                {/* base — grayscale */}
+                <picture>
+                  <source srcSet={step.image800} media="(max-width: 768px)" />
+                  <source srcSet={step.image1100} media="(max-width: 1024px)" />
+                  <img
+                    src={step.image}
+                    alt={step.title}
+                    className="how__image how__image--base"
+                    ref={el => imagesRef.current[i] = el}
+                    style={{ opacity: i === 0 ? 1 : 0 }}
+                    decoding="async"
+                  />
+                </picture>
+
+                {/* color — torch spotlight layer */}
+                <picture>
+                  <source srcSet={step.image800} media="(max-width: 768px)" />
+                  <source srcSet={step.image1100} media="(max-width: 1024px)" />
+                  <img
+                    src={step.image}
+                    alt=""
+                    aria-hidden="true"
+                    className="how__image how__image--color"
+                    ref={el => colorImagesRef.current[i] = el}
+                    style={{ opacity: i === 0 ? 1 : 0, clipPath: 'circle(0px at 50% 50%)' }}
+                    decoding="async"
+                  />
+                </picture>
               </Fragment>
             ))}
           </motion.div>
