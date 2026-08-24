@@ -1,84 +1,75 @@
-import { Fragment, useEffect, useRef, useState } from 'react'
-import { motion, useMotionValue, useSpring } from 'motion/react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import '../styles/howitworks.scss'
+  import { Fragment, useEffect, useRef } from 'react'
+  import { gsap } from 'gsap'
+  import { ScrollTrigger } from 'gsap/ScrollTrigger'
+  import '../styles/howitworks.scss'
 
-import step1_800  from '../../../assets/images/howitworks/step1-800.webp'
-import step1_1100 from '../../../assets/images/howitworks/step1-1100.webp'
-import step1_1400 from '../../../assets/images/howitworks/step1-1400.webp'
-import step2_800  from '../../../assets/images/howitworks/step2-800.webp'
-import step2_1100 from '../../../assets/images/howitworks/step2-1100.webp'
-import step2_1400 from '../../../assets/images/howitworks/step2-1400.webp'
-import step3_800  from '../../../assets/images/howitworks/step3-800.webp'
-import step3_1100 from '../../../assets/images/howitworks/step3-1100.webp'
-import step3_1400 from '../../../assets/images/howitworks/step3-1400.webp'
-import flipSoundSrc from '../../../assets/sounds/page-flip.wav'
+  import step1_800  from '../../../assets/images/howitworks/step1-800.webp'
+  import step1_1100 from '../../../assets/images/howitworks/step1-1100.webp'
+  import step1_1400 from '../../../assets/images/howitworks/step1-1400.webp'
+  import step2_800  from '../../../assets/images/howitworks/step2-800.webp'
+  import step2_1100 from '../../../assets/images/howitworks/step2-1100.webp'
+  import step2_1400 from '../../../assets/images/howitworks/step2-1400.webp'
+  import step3_800  from '../../../assets/images/howitworks/step3-800.webp'
+  import step3_1100 from '../../../assets/images/howitworks/step3-1100.webp'
+  import step3_1400 from '../../../assets/images/howitworks/step3-1400.webp'
+  import flipSoundSrc from '../../../assets/sounds/page-flip.wav'
 
-gsap.registerPlugin(ScrollTrigger)
+  gsap.registerPlugin(ScrollTrigger)
 
-const audio = new Audio(flipSoundSrc)
-audio.volume = 0.4
-
-const steps = [
-  {
-    number: '01',
-    title: 'LOOK AT\nCAMERA',
-    desc: 'Allow camera access once. No photos saved, no data stored. Everything happens live in your browser.',
-    image: step1_1400,
-    image1100: step1_1100,
-    image800: step1_800,
-  },
-  {
-    number: '02',
-    title: 'WE READ\nYOUR MOOD',
-    desc: 'face-api.js detects your expression instantly — happy, sad, angry, surprised and more.',
-    image: step2_1400,
-    image1100: step2_1100,
-    image800: step2_800,
-  },
-  {
-    number: '03',
-    title: 'MUSIC\nPLAYS',
-    desc: 'Last.fm finds the perfect tracks for your mood. Music starts playing automatically.',
-    image: step3_1400,
-    image1100: step3_1100,
-    image800: step3_800,
-  }
-]
-
-const HowItWorks = () => {
-  const sectionRef       = useRef(null)
-  const stickyRef        = useRef(null)
-  const imagesRef        = useRef([])
-  const centerRef        = useRef(null)
-  const colorImagesRef   = useRef([])
-  const numbersRef       = useRef([])
-  const titlesRef        = useRef([])
-  const descsRef         = useRef([])
-  const progressRef      = useRef(null)
-  const activeNumRef     = useRef(null)
-  const prevStepRef      = useRef(-1)
-  const audioUnlockedRef = useRef(false)
-  const [activeStep, setActiveStep] = useState(0)
-  const springCfg = { damping: 30, stiffness: 100, mass: 2 }
-  const tiltX = useSpring(useMotionValue(0), springCfg)
-  const tiltY = useSpring(useMotionValue(0), springCfg)
-  const tiltScale = useSpring(1, springCfg)
-
-  // unlock audio on first user interaction
-  useEffect(() => {
-    const unlock = () => { audioUnlockedRef.current = true }
-    window.addEventListener('click', unlock, { once: true })
-    window.addEventListener('scroll', unlock, { once: true })
-    return () => {
-      window.removeEventListener('click', unlock)
-      window.removeEventListener('scroll', unlock)
+  const steps = [
+    {
+      number: '01',
+      title: 'LOOK AT\nCAMERA',
+      desc: 'Allow camera access once. No photos saved, no data stored. Everything happens live in your browser.',
+      image: step1_1400,
+      image1100: step1_1100,
+      image800: step1_800,
+    },
+    {
+      number: '02',
+      title: 'WE READ\nYOUR MOOD',
+      desc: 'face-api.js detects your expression instantly — happy, sad, angry, surprised and more.',
+      image: step2_1400,
+      image1100: step2_1100,
+      image800: step2_800,
+    },
+    {
+      number: '03',
+      title: 'MUSIC\nPLAYS',
+      desc: 'Last.fm finds the perfect tracks for your mood. Music starts playing automatically.',
+      image: step3_1400,
+      image1100: step3_1100,
+      image800: step3_800,
     }
-  }, [])
+  ]
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
+  const HowItWorks = () => {
+    const sectionRef       = useRef(null)
+    const stickyRef        = useRef(null)
+    const imagesRef        = useRef([])
+    const centerRef        = useRef(null)
+    const colorImagesRef   = useRef([])
+    const titlesRef        = useRef([])
+    const descsRef         = useRef([])
+    const progressRef      = useRef(null)
+    const activeNumRef     = useRef(null)
+    const prevStepRef      = useRef(-1)
+    const audioRef         = useRef(null)
+    const audioUnlockedRef = useRef(false)
+
+    // unlock audio on first user interaction
+    useEffect(() => {
+      const unlock = () => { audioUnlockedRef.current = true }
+      window.addEventListener('click', unlock, { once: true })
+      window.addEventListener('scroll', unlock, { once: true })
+      return () => {
+        window.removeEventListener('click', unlock)
+        window.removeEventListener('scroll', unlock)
+      }
+    }, [])
+
+    useEffect(() => {
+      const ctx = gsap.context(() => {
 
       // ── PIN THE STICKY PANEL ────────────────
       ScrollTrigger.create({
@@ -88,12 +79,37 @@ const HowItWorks = () => {
         pin: stickyRef.current,
         pinSpacing: false,
         onUpdate: (self) => {
-          const newStep = Math.min(
-            steps.length - 1,
-            Math.floor(self.progress * steps.length)
-          )
+          const rawProgress = self.progress * steps.length
+          const newStep = Math.min(steps.length - 1, Math.floor(rawProgress))
+          const stepProgress = Math.min(rawProgress - newStep, 1)
+
           if (newStep !== prevStepRef.current) {
             activateStep(newStep)
+          }
+
+          // Progress bar scrubs with scroll
+          gsap.set(progressRef.current, { scaleY: self.progress })
+
+          if (newStep === 0) {
+            // Step 0 has no outgoing, just keep visible + light push nudge
+            const pushStart = 0.6
+            const pushProgress = stepProgress > pushStart
+              ? (stepProgress - pushStart) / (1 - pushStart) : 0
+            const img0 = imagesRef.current[0]
+            if (img0) gsap.set(img0, { clipPath: 'inset(0% 0 0% 0)', y: -pushProgress * 14 })
+
+          } else {
+            // Incoming: top inset shrinks → reveals from bottom as you scroll
+            const incomingImg = imagesRef.current[newStep]
+            if (incomingImg) gsap.set(incomingImg, {
+              clipPath: `inset(${((1 - stepProgress) * 100).toFixed(1)}% 0 0% 0)`
+            })
+
+            // Outgoing: bottom inset grows → exits upward as you scroll
+            const outgoingImg = imagesRef.current[newStep - 1]
+            if (outgoingImg) gsap.set(outgoingImg, {
+              clipPath: `inset(0% 0 ${(stepProgress * 100).toFixed(1)}% 0)`
+            })
           }
         }
       })
@@ -118,45 +134,54 @@ const HowItWorks = () => {
   const activateStep = (i) => {
     // ── PLAY PAGE FLIP SOUND ─────────────────
     if (prevStepRef.current !== -1 && prevStepRef.current !== i && audioUnlockedRef.current) {
-      audio.currentTime = 0
-      audio.play().catch(() => {})
+      if (!audioRef.current) {
+        audioRef.current = new Audio(flipSoundSrc)
+        audioRef.current.volume = 0.4
+      }
+      audioRef.current.currentTime = 0
+      audioRef.current.play().catch(() => {})
     }
     prevStepRef.current = i
-
-    setActiveStep(i)
 
     // ── IMAGE crossfade ─────────────────────
     imagesRef.current.forEach((img, idx) => {
       const colorImg = colorImagesRef.current[idx]
+      gsap.killTweensOf(img)
 
       if (idx === i) {
-        // incoming: wipe up from bottom
-        gsap.killTweensOf(img)
-        gsap.fromTo(img,
-          { clipPath: 'inset(100% 0 0 0)', opacity: 1, scale: 1.05,
-            filter: 'grayscale(0.45) sepia(0.1) blur(0px)' },
-          { clipPath: 'inset(0% 0 0 0)', opacity: 1, scale: 1,
-            filter: 'grayscale(0.45) sepia(0.1) blur(0px)',
-            duration: 1.4, ease: 'expo.out', overwrite: true
-          }
-        )
+        // Incoming: set initial clip state, onUpdate scrubs it from here
+        gsap.set(img, {
+          opacity: 1, scale: 1, y: 0,
+          clipPath: i === 0 ? 'inset(0% 0 0% 0)' : 'inset(100% 0 0% 0)',
+          filter: 'grayscale(0.45) sepia(0.1) blur(0px)',
+        })
         if (colorImg) {
           colorImg.style.clipPath = 'circle(0px at 50% 50%)'
           gsap.to(colorImg, { opacity: 1, duration: 1.4, ease: 'expo.out', overwrite: 'auto' })
         }
-      } else {
-        // outgoing: quick fade + slight scale down
-        gsap.to(img, {
-          opacity: 0,
-          scale: 0.97,
-          filter: 'grayscale(0.8) sepia(0.2) blur(4px)',
-          duration: 0.2,
-          ease: 'power2.in',
-          overwrite: 'auto'
+
+      } else if (idx === i - 1) {
+        // Adjacent outgoing: keep visible, onUpdate drives the clip-path exit
+        gsap.set(img, {
+          opacity: 1, scale: 1, y: 0,
+          clipPath: 'inset(0% 0 0% 0)',
+          filter: 'grayscale(0.45) sepia(0.1) blur(0px)'
         })
         if (colorImg) {
           colorImg.style.clipPath = 'circle(0px at 50% 50%)'
-          gsap.to(colorImg, { opacity: 0, duration: 0.2, ease: 'power2.in', overwrite: 'auto' })
+          gsap.set(colorImg, { opacity: 0 })
+        }
+
+      } else {
+        // Non-adjacent (2+ steps away): hide immediately
+        gsap.set(img, {
+          opacity: 0,
+          y: 0,
+          clipPath: 'inset(100% 0 0% 0)'
+        })
+        if (colorImg) {
+          colorImg.style.clipPath = 'circle(0px at 50% 50%)'
+          gsap.set(colorImg, { opacity: 0 })
         }
       }
     })
@@ -201,43 +226,50 @@ const HowItWorks = () => {
       })
     })
 
-    // ── PROGRESS BAR ────────────────────────
-    gsap.to(progressRef.current, {
-      scaleY: (i + 1) / steps.length,
-      duration: 0.6,
-      ease: 'power2.out',
-      overwrite: 'auto'
-    })
   }
 
   const handleMouseMove = (e) => {
     const rect = centerRef.current?.getBoundingClientRect()
     if (!rect) return
 
-    // torch spotlight
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
     const colorImg = colorImagesRef.current[prevStepRef.current]
-    if (colorImg) colorImg.style.clipPath = `circle(100px at ${x}px ${y}px)`
+    if (colorImg) colorImg.style.clipPath = `circle(120px at ${x}px ${y}px)`
 
-    // tilt
+    // GSAP tilt — replaces Framer Motion
     const offsetX = e.clientX - rect.left - rect.width / 2
     const offsetY = e.clientY - rect.top - rect.height / 2
-    tiltX.set((offsetY / (rect.height / 2)) * -6)
-    tiltY.set((offsetX / (rect.width / 2)) * 6)
+    gsap.to(centerRef.current, {
+      rotateX: (offsetY / (rect.height / 2)) * -6,
+      rotateY: (offsetX / (rect.width / 2)) * 6,
+      duration: 0.5,
+      ease: 'power2.out',
+      overwrite: 'auto',
+    })
   }
 
   const handleMouseEnter = () => {
-    tiltScale.set(1.03)
+    gsap.to(centerRef.current, {
+      scale: 1.03,
+      duration: 0.5,
+      ease: 'power2.out',
+      overwrite: 'auto',
+    })
   }
 
   const handleMouseLeave = () => {
     colorImagesRef.current.forEach(img => {
       if (img) img.style.clipPath = 'circle(0px at 50% 50%)'
     })
-    tiltX.set(0)
-    tiltY.set(0)
-    tiltScale.set(1)
+    gsap.to(centerRef.current, {
+      rotateX: 0,
+      rotateY: 0,
+      scale: 1,
+      duration: 0.6,
+      ease: 'power2.out',
+      overwrite: 'auto',
+    })
   }
 
   return (
@@ -265,13 +297,12 @@ const HowItWorks = () => {
           </div>
 
           {/* CENTER — image */}
-          <motion.div
+          <div
             className="how__center"
             ref={centerRef}
             onMouseMove={handleMouseMove}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            style={{ rotateX: tiltX, rotateY: tiltY, scale: tiltScale }}
           >
             {steps.map((step, i) => (
               <Fragment key={i}>
@@ -305,7 +336,7 @@ const HowItWorks = () => {
                 </picture>
               </Fragment>
             ))}
-          </motion.div>
+          </div>
 
           {/* RIGHT — title + desc + circular text */}
           <div className="how__right">
