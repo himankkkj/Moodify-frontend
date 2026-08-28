@@ -1,4 +1,4 @@
-const BASE_URL = (import.meta.env.VITE_JIOSAAVN_URL || '').replace(/\/$/, '')
+const BASE_URL = (import.meta.env.VITE_JIOSAAVN_URL || 'https://jiosaavn-api.jhimank49.workers.dev/api').replace(/\/$/, '')
 
 const DEBUG = import.meta.env.DEV
 const log = (...args) => { if (DEBUG) console.log(...args) }

@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_JIOSAAVN_URL || "https://saavn.dev/api";
+const BASE_URL = import.meta.env.VITE_JIOSAAVN_URL || "https://jiosaavn-api.jhimank49.workers.dev/api";
 
 const isMobile =
   typeof navigator !== "undefined" &&
