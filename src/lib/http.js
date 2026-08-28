@@ -1,15 +1,22 @@
 import axios from 'axios'
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+// Uses Vite environment variable in production, falls back to localhost in dev
+const rawBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+const baseURL = rawBaseUrl.endsWith('/api/auth')
+  ? rawBaseUrl
+  : `${rawBaseUrl.replace(/\/$/, '')}/api/auth`
 
-export const api = axios.create({
-  baseURL: `${API_BASE}/api/auth`,
+const http = axios.create({
+  baseURL,
+  // REQUIRED: Allows sending and receiving secure cookies across domains (Pages -> Render)
   withCredentials: true,
-  timeout: 15000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 })
 
 // Normalize error messages across all API calls
-api.interceptors.response.use(
+http.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error) {
@@ -24,3 +31,6 @@ api.interceptors.response.use(
     return Promise.reject(error)
   }
 )
+
+export const api = http
+export default http
