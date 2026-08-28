@@ -1,0 +1,176 @@
+.mood-page {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+
+  // ── BG BLUR FOR ONBOARDING ───────────────────────────
+  &__bg {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    transition: filter 0.4s ease;
+
+    &--blurred {
+      filter: blur(8px);
+      pointer-events: none;
+      user-select: none;
+    }
+  }
+
+  // ── HEADER ──────────────────────────────────────────
+  &__header {
+    padding: 2rem 2.5rem 1.5rem;
+    border-bottom: 1px solid rgba(10, 10, 10, 0.08);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+
+  &__title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    letter-spacing: 0.05em;
+    color: var(--color-text);
+    line-height: 1;
+    margin: 0;
+
+    .accent { color: var(--color-accent); }
+  }
+
+  &__subtitle {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: var(--color-secondary);
+    letter-spacing: 0.05em;
+  }
+
+  // ── MAIN CONTENT ────────────────────────────────────
+  &__content {
+    display: grid;
+    grid-template-columns: minmax(320px, 480px) 1fr;
+    flex: 1;
+    min-height: 0;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // ── LEFT — CAMERA COLUMN ─────────────────────────────
+  &__webcam-wrap {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid rgba(10, 10, 10, 0.08);
+    height: calc(100vh - 73px);
+  }
+
+  // ── RIGHT — INFO COLUMN ──────────────────────────────
+  &__display-wrap {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 2.5rem;
+    height: calc(100vh - 73px);
+    justify-content: space-between;
+  }
+
+  // ── ACTIONS — inside webcam column ───────────────────
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-top: 1px solid rgba(10, 10, 10, 0.08);
+  }
+
+  &__btn {
+    width: 100%;
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    letter-spacing: 0.2em;
+    padding: 1.1rem 2rem;
+    border: none;
+    border-bottom: 1px solid rgba(10, 10, 10, 0.08);
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+    text-align: center;
+
+    &:hover:not(:disabled) {
+      background: var(--color-text);
+      color: var(--color-bg);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: -2px;
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.99);
+    }
+
+    &--primary {
+      background: var(--color-accent);
+      color: var(--color-bg);
+      border-color: transparent;
+      letter-spacing: 0.15em;
+
+      &:hover:not(:disabled) {
+        background: var(--color-text);
+      }
+    }
+
+    &--disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.mood-page__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 80px);
+  gap: 1rem;
+  text-align: center;
+  padding: 2rem;
+}
+
+.mood-page__empty-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 5vw, 5rem);
+  letter-spacing: 0.05em;
+  color: var(--color-text);
+  line-height: 1;
+}
+
+.mood-page__empty-sub {
+  font-size: 0.9rem;
+  color: var(--color-secondary);
+}
+
+.mood-page__detect-toggle {
+  position: fixed;
+  top: 1.5rem;
+  right: 2rem;
+  z-index: 100;
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: var(--color-text);
+  color: var(--color-bg);
+  border: none;
+  padding: 0.6rem 1.25rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: var(--color-accent);
+  }
+}

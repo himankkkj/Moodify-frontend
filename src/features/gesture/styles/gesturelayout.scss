@@ -1,0 +1,1119 @@
+$player-height: 80px;
+$topbar-height: 60px;
+$border-color: rgba(10, 10, 10, 0.08);
+$border: 1px solid $border-color;
+$idle-bg: url('../../../assets/images/gesture/gestureLayout.webp');
+
+// Design tokens (single source of truth)
+$radius-sm: 4px;
+$radius-md: 6px;
+$radius-lg: 8px;
+$radius-xl: 10px;
+
+$search-radius: $radius-lg;      // BOTH search boxes use this
+$dropdown-radius: $radius-lg;    // BOTH dropdowns use this
+$dropdown-max-h: 320px;
+$dropdown-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+$accent-tint: rgba(200, 16, 46, 0.12);
+$accent-ring: 0 0 0 3px rgba(200, 16, 46, 0.15);
+
+// ─── Mixins & Keyframes ──────────────────────────────────────
+@mixin shimmer {
+    background: linear-gradient(90deg,
+        rgba(0, 0, 0, 0.06) 25%,
+        rgba(0, 0, 0, 0.10) 50%,
+        rgba(0, 0, 0, 0.06) 75%);
+    background-size: 200% 100%;
+    animation: g-shimmer 1.2s ease infinite;
+}
+
+// Shared search-field visual language (used by BOTH search islands)
+@mixin search-field($bg: #fff) {
+    width: 100%;
+    box-sizing: border-box;
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    padding: 0.6rem 2.25rem 0.6rem 2.35rem;
+    border: 1.5px solid rgba(10, 10, 10, 0.18);
+    border-radius: $search-radius;
+    background: $bg;
+    color: var(--color-text);
+    outline: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+
+    &::placeholder {
+        color: var(--color-secondary);
+        opacity: 0.7;
+    }
+
+    &:hover  { border-color: rgba(10, 10, 10, 0.28); }
+    &:focus  {
+        border-color: var(--color-accent);
+        box-shadow: $accent-ring;
+        background: #fff;
+    }
+}
+
+@mixin search-icon($color: var(--color-accent)) {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $color;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@mixin search-spinner {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(0, 0, 0, 0.10);
+    border-top-color: var(--color-accent);
+    border-radius: 50%;
+    animation: g-spin 0.7s linear infinite;
+}
+
+@mixin search-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #fff;
+    border: 1.5px solid rgba(0, 0, 0, 0.10);
+    border-radius: $dropdown-radius;
+    box-shadow: $dropdown-shadow;
+    z-index: 200;
+    max-height: $dropdown-max-h;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+@keyframes g-spin    { to { transform: translateY(-50%) rotate(360deg); } }
+@keyframes g-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+// ─────────────────────────────────────────────────────────────
+// Layout
+// ─────────────────────────────────────────────────────────────
+.g-layout {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    transition: height 0.35s ease;
+
+    &--idle    { height: 100dvh; }
+    &--playing { height: calc(100dvh - #{$player-height}); }
+
+    // ─── Topbar ──────────────────────────────────────────────
+    &__topbar {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem 1.5rem;
+        height: $topbar-height;
+        box-sizing: border-box;
+        border-bottom: $border;
+        background: #fff;
+        flex-shrink: 0;
+        width: 100%;
+    }
+
+    &__mood-btn {
+        flex-shrink: 0;
+        font-family: var(--font-heading);
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        padding: 0.55rem 1rem;
+        border: 1.5px solid var(--color-accent);
+        background: transparent;
+        color: var(--color-accent);
+        border-radius: $radius-lg;
+        cursor: pointer;
+        white-space: nowrap;
+        text-transform: uppercase;
+        transition: background 0.15s, color 0.15s;
+
+        &:hover {
+            background: var(--color-accent);
+            color: #fff;
+        }
+    }
+
+    // ─── Main 3-column row ───────────────────────────────────
+    &__main-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.4fr);
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    // ─── Left: Active song / Idle panel ──────────────────────
+    &__active-col {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        border-right: $border;
+        min-width: 0;
+        min-height: 0;
+        box-sizing: border-box;
+    }
+
+    &__active-wrap {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        min-height: 0;
+
+        .g-layout--playing & {
+            aspect-ratio: 1;
+            height: auto;
+        }
+    }
+
+    // ─── Center Column: Camera & Guide ───
+    &__cam-col {
+        contain: layout style paint;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px; // Space between outer column and the inner card
+        border-right: $border;
+        background: var(--color-bg); // Matches overall background
+        overflow: hidden;
+        min-width: 0;
+        min-height: 0;
+        box-sizing: border-box;
+    }
+
+    &__cam-shell {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        overflow: hidden;
+        background: #121212; // Sleek dark card background like reference
+        border-radius: 12px; // Rounded corners for the card
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        position: relative;
+
+        &.is-idle {
+            padding: 24px;
+            
+            .g-layout__cam-feed {
+                // THE FIX: 1 1 0% + min-height: 0 ensures this section shrinks 
+                // when the player pops up, so the button NEVER disappears.
+                flex: 1 1 0%; 
+                min-height: 0; 
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .g-layout__cam-guide {
+                flex: 0 0 auto; // Never shrink text
+                padding: 0;
+                margin-top: 16px;
+            }
+            
+            .g-layout__cam-action {
+                flex: 0 0 auto; // Never shrink button
+                padding: 20px 0 0 0;
+                margin-top: 16px;
+                border-top: 1px solid rgba(255, 255, 255, 0.06);
+                background: transparent;
+            }
+        }
+
+        &.is-live {
+            .g-layout__cam-feed {
+                position: absolute;
+                inset: 0;
+                z-index: 1;
+            }
+            .gesture-camera,
+            .gesture-camera__feed,
+            .gesture-camera__video {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+            .g-layout__cam-action {
+                position: absolute;
+                inset: auto 0 0 0;
+                z-index: 3;
+                padding: 24px 16px 16px;
+                background: linear-gradient(to top, rgba(0,0,0,0.92) 40%, transparent);
+                border-top: none;
+                margin-top: 0;
+            }
+        }
+    }
+
+    &__cam-hint {
+        display: none; // Hiding this extra text to match the clean reference image
+    }
+
+    &__cam-action {
+        flex-shrink: 0;
+        padding: 10px 16px 16px;
+        margin-top: auto;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+        background: #0a0a0a;
+        z-index: 2;
+    }
+
+    &__cam-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        width: 100%;
+        min-height: 44px;
+        font-family: var(--font-heading);
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        padding: 0.75rem 1rem;
+        border: 1.5px solid rgba(255, 255, 255, 0.35);
+        background: transparent;
+        color: #fff;
+        cursor: pointer;
+        text-transform: uppercase;
+        transition: background 0.2s, color 0.2s, border-color 0.2s;
+
+        &-icon {
+            color: var(--color-accent);
+            flex-shrink: 0;
+        }
+
+        &:hover:not(:disabled) {
+            border-color: var(--color-accent);
+            background: $accent-tint;
+        }
+
+        &--stop {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+            &:hover:not(:disabled) {
+                background: var(--color-accent);
+                color: #fff;
+            }
+        }
+
+        &:disabled { opacity: 0.4; cursor: not-allowed; }
+    }
+
+    // ─── Gesture Display (Text & Controls) ───
+    .gesture-display {
+        &__status {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start; // Left-aligned like reference
+            text-align: left;
+            gap: 4px;
+            margin-bottom: 24px;
+        }
+        
+        &__status-icon { 
+            color: var(--color-accent); 
+            font-size: 1.1rem;
+            margin-bottom: 2px;
+        }
+        
+        &__status-title {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffffff; // White text like reference
+        }
+        
+        &__status-sub { 
+            margin: 0; 
+            font-size: 0.8rem; 
+            color: rgba(255, 255, 255, 0.5); 
+        }
+        
+        &__divider { display: none; } // Removed to match reference
+        
+        &__section {
+            margin: 0 0 12px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+        }
+        
+        &__list { 
+            list-style: none; 
+            margin: 0; 
+            padding: 0; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+        }
+        
+        &__row {
+            display: grid;
+            grid-template-columns: 20px 1fr auto;
+            align-items: center;
+            gap: 12px;
+            padding: 6px 0;
+        }
+        
+        &__row-icon  { color: var(--color-accent); flex-shrink: 0; }
+        
+        &__row-label { 
+            font-size: 0.75rem; 
+            font-weight: 600; 
+            letter-spacing: 0.05em; 
+            color: #fff; 
+        }
+        
+        &__row-hint {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.5);
+            white-space: nowrap;
+        }
+        
+        &__row-emoji { font-size: 1rem; line-height: 1; }
+        
+        &__row--active {
+            .g-song-row__name { color: var(--color-accent); }
+        }
+    }
+
+    // ─── Right: Queue / Popular ──────────────────────────────
+    &__queue-col {
+        contain: layout style;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        min-height: 0;
+        height: 100%;
+        padding: 16px 20px;
+        overflow: hidden;
+        box-sizing: border-box;
+    }
+
+    &__queue-wrap {
+        width: 100%;
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    &__list-header {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    &__list-label,
+    &__rec-label {
+        font-family: var(--font-heading);
+        font-size: 1.125rem;
+        letter-spacing: 0.14em;
+        font-weight: 500;
+        color: var(--color-secondary);
+        text-transform: uppercase;
+        margin: 0;
+    }
+
+    &__queue-loading {
+        font-family: var(--font-heading);
+        font-size: 0.6rem;
+        letter-spacing: 0.12em;
+        color: var(--color-secondary);
+        opacity: 0.6;
+        text-transform: uppercase;
+    }
+
+    &__song-cols {
+        flex: 1;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 16px;
+    }
+
+    &__song-col {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 0;
+        min-height: 0;
+    }
+
+    &__list-empty {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        p {
+            font-family: var(--font-heading);
+            font-size: 0.68rem;
+            letter-spacing: 0.18em;
+            color: var(--color-secondary);
+            opacity: 0.45;
+        }
+    }
+
+    &__popular-list {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        overflow: hidden;
+
+        .g-song-row { flex: 1 1 0; max-height: 88px; }
+    }
+
+    // ─── Recommended ─────────────────────────────────────────
+    &__recommended {
+        contain: layout style;
+        flex-shrink: 0;
+        width: 100%;
+        padding: 16px 24px 20px;
+        box-sizing: border-box;
+        border-top: $border;
+        background: var(--color-bg, #fff);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        overflow: hidden;
+        z-index: 2;
+        transition: padding 0.35s ease;
+
+        .g-layout--idle & { padding: 20px 24px 28px; }
+    }
+
+    &__rec-row {
+        display: flex;
+        gap: 16px;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Search Island (Topbar) — single, canonical definition
+    // ─────────────────────────────────────────────────────────
+    .g-search {
+        position: relative;
+        flex: 1 1 auto;
+        min-width: 0;
+
+        &__icon    { @include search-icon; }
+        &__input   { @include search-field(#fff); }
+        &__spinner { @include search-spinner; }
+        &__dropdown{ @include search-dropdown; }
+
+        &__result {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0.875rem;
+            cursor: pointer;
+            transition: background 0.1s;
+
+            &:hover { background: rgba(0, 0, 0, 0.035); }
+            &:not(:last-child) { border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
+
+            &:first-child { border-radius: #{$dropdown-radius - 1} #{$dropdown-radius - 1} 0 0; }
+            &:last-child  { border-radius: 0 0 #{$dropdown-radius - 1} #{$dropdown-radius - 1}; }
+        }
+
+        &__result-img {
+            width: 38px;
+            height: 38px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border-radius: $radius-sm;
+
+            &--empty { background: rgba(0, 0, 0, 0.06); }
+        }
+
+        &__result-meta {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        &__result-name,
+        &__result-artist,
+        &__result-dur {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        &__result-name   { font-size: 0.8rem; font-weight: 500; color: var(--color-text); }
+        &__result-artist { font-size: 0.72rem; color: var(--color-secondary); }
+        &__result-dur {
+            font-size: 0.72rem;
+            color: var(--color-secondary);
+            flex-shrink: 0;
+            font-variant-numeric: tabular-nums;
+        }
+
+        &__no-results {
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--color-secondary);
+            margin: 0;
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Active song poster
+    // ─────────────────────────────────────────────────────────
+    .g-active {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: #0a0a0a;
+        border-radius: $radius-lg;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+
+        &--skeleton {
+            background: transparent;
+            box-shadow: none;
+        }
+
+        &__cover-wrap {
+            position: absolute;
+            inset: 0;
+
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(to top,
+                    rgba(0, 0, 0, 0.95) 0%,
+                    rgba(0, 0, 0, 0.30) 55%,
+                    transparent 100%);
+            }
+        }
+
+        &__cover {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        &__cover-placeholder {
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        &__info {
+            position: relative;
+            z-index: 2;
+            padding: 1.25rem;
+            color: #fff;
+        }
+
+        &__eyebrow {
+            font-family: var(--font-heading);
+            font-size: 0.65rem;
+            letter-spacing: 0.25em;
+            color: var(--color-accent);
+            margin: 0 0 0.4rem;
+            text-transform: uppercase;
+        }
+
+        &__name {
+            font-family: var(--font-heading);
+            font-size: 1.35rem;
+            letter-spacing: 0.03em;
+            margin: 0 0 0.2rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        &__artist {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        &__skeleton-cover {
+            width: 100%;
+            height: 100%;
+            border-radius: $radius-lg;
+            @include shimmer;
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Song rows
+    // ─────────────────────────────────────────────────────────
+    .g-song-row {
+        flex: 1 1 0;
+        min-height: 0;
+        max-height: 72px;
+        display: grid;
+        grid-template-columns: 28px 44px 1fr auto;
+        gap: 12px;
+        align-items: center;
+        padding: 6px 12px;
+        width: 100%;
+        box-sizing: border-box;
+        min-width: 0;
+        border-radius: $radius-md;
+        background: rgba(10, 10, 10, 0.045);
+        border: 1px solid rgba(10, 10, 10, 0.06);
+        cursor: pointer;
+        transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+
+        &:hover {
+            background: rgba(10, 10, 10, 0.08);
+            border-color: rgba(10, 10, 10, 0.12);
+        }
+
+        &--active {
+            background: $accent-tint;
+            border-color: var(--color-accent);
+            box-shadow: 0 4px 14px rgba(200, 16, 46, 0.18);
+
+            .g-song-row__name,
+            .g-song-row__num,
+            .g-song-row__dur { color: var(--color-accent); }
+            .g-song-row__name { font-weight: 600; }
+            .g-song-row__num  { font-weight: 700; font-size: 0.75rem; }
+            .g-song-row__dur  { font-weight: 500; }
+        }
+
+        &__num {
+            font-family: var(--font-heading);
+            font-size: 0.7rem;
+            color: var(--color-secondary);
+            text-align: center;
+            font-variant-numeric: tabular-nums;
+        }
+
+        &__cover {
+            width: 44px;
+            height: 44px;
+            border-radius: $radius-sm;
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                display: block;
+            }
+        }
+
+        &__cover-placeholder {
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.07);
+        }
+
+        &__meta {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        &__name,
+        &__artist,
+        &__dur {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        &__name   { font-size: 0.78rem; font-weight: 500; color: var(--color-text); }
+        &__artist { font-size: 0.68rem; color: var(--color-secondary); }
+        &__dur {
+            font-size: 0.68rem;
+            color: var(--color-secondary);
+            font-variant-numeric: tabular-nums;
+        }
+
+        &--skeleton {
+            pointer-events: none;
+            background: rgba(10, 10, 10, 0.03);
+            border-color: transparent;
+
+            .g-song-row__cover {
+                @include shimmer;
+                border-radius: $radius-sm;
+            }
+        }
+
+        &__skeleton-line {
+            height: 10px;
+            border-radius: $radius-sm;
+            @include shimmer;
+
+            &--name   { width: 70%; margin-bottom: 4px; }
+            &--artist { width: 45%; height: 8px; }
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Recommended cards
+    // ─────────────────────────────────────────────────────────
+    .g-rec-card {
+        flex: 1 1 0;
+        min-width: 0;
+        max-width: 180px;
+        cursor: pointer;
+        transition: opacity 0.15s, transform 0.15s;
+
+        .g-layout--idle & { max-width: 200px; }
+
+        &:hover {
+            opacity: 0.85;
+            transform: translateY(-2px);
+        }
+
+        &--skeleton { pointer-events: none; }
+
+        &__cover,
+        &__cover-placeholder,
+        &__cover--skeleton {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: $radius-lg;
+            margin-bottom: 6px;
+            overflow: hidden;
+        }
+
+        &__cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        &__cover-placeholder { background: rgba(0, 0, 0, 0.07); }
+        &__cover--skeleton   { @include shimmer; }
+
+        &__skeleton-line {
+            height: 9px;
+            border-radius: $radius-sm;
+            @include shimmer;
+            margin-bottom: 0.3rem;
+
+            &--name   { width: 80%; }
+            &--artist { width: 55%; }
+        }
+
+        &__name,
+        &__artist {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin: 0;
+        }
+
+        &__name {
+            font-size: 13px;
+            line-height: 18px;
+            font-weight: 500;
+            margin-bottom: 2px;
+            color: var(--color-text);
+        }
+
+        &__artist {
+            font-size: 12px;
+            line-height: 16px;
+            color: var(--color-secondary);
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────
+    // Idle Panel
+    // ─────────────────────────────────────────────────────────
+    .g-idle {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        min-height: 360px;
+        padding: 32px 28px 96px; // extra bottom room so tiles never touch dropdown
+        box-sizing: border-box;
+        background-color: #fefefe;
+        background-image: $idle-bg;
+        background-repeat: no-repeat;
+        background-position: bottom right;
+        background-size: 100% auto;
+        border: 1px solid rgba(10, 10, 10, 0.06);
+        border-radius: $radius-xl;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+
+        &__content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 12px;
+        }
+
+        &__heading {
+            font-family: var(--font-heading);
+            font-size: clamp(1.8rem, 2.5vw, 2.25rem);
+            line-height: 1.2;
+            font-weight: 600;
+            color: var(--color-text);
+            margin: 0;
+        }
+
+        &__heading-accent {
+            color: var(--color-accent);
+            font-weight: 700;
+        }
+
+        &__subtitle {
+            font-size: 0.82rem;
+            line-height: 1.5;
+            color: var(--color-secondary);
+            margin: 0;
+            max-width: 22em;
+        }
+
+        // Idle search — reuses the shared field visual language
+        &__search {
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+            margin-top: 6px;
+            z-index: 20;
+        }
+
+        &__search-icon    { @include search-icon; }
+        &__search-input   { @include search-field(rgba(255, 255, 255, 0.92)); }
+        &__search-spinner { @include search-spinner; }
+        &__dropdown       { @include search-dropdown; }
+
+        &__no-results {
+            padding: 0.85rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--color-secondary);
+            margin: 0;
+        }
+
+        // Reuse search result styles inside the idle dropdown
+        &__dropdown .g-search__result {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.6rem 0.875rem;
+
+            &:hover { background: rgba(0, 0, 0, 0.035); }
+            &:not(:last-child) { border-bottom: 1px solid rgba(0, 0, 0, 0.05); }
+        }
+
+        &__tiles {
+            position: absolute;
+            left: 12px;
+            right: 12px;
+            bottom: 14px;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+        }
+    }
+
+    .g-idle-tile {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+        padding: 10px 2px;
+        border-radius: $radius-md;
+        text-align: center;
+
+        &__icon {
+            color: var(--color-accent);
+            margin-bottom: 2px;
+            stroke-width: 1.8;
+        }
+
+        &__label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--color-text);
+            margin: 0;
+        }
+
+        &__sub {
+            font-size: 0.68rem;
+            color: var(--color-secondary);
+            margin: 0;
+        }
+    }
+
+    // ─── Camera vinyl (Responsive Vinyl) ───
+    .gesture-camera {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        background: transparent;
+    }
+
+    .gesture-camera__vinyl-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .gesture-camera__vinyl {
+        width: 100%;
+        max-width: 160px; // Won't grow larger than this
+        aspect-ratio: 1; // Keeps it perfectly round
+        height: auto;
+        max-height: 100%; // CRITICAL: Shrinks vertically if needed
+        border-radius: 50%;
+        
+        // Cool textured vinyl look like the reference
+        background: repeating-radial-gradient(
+            circle at center,
+            #1a1a1a 0,
+            #1a1a1a 4px,
+            #111111 5px,
+            #111111 9px
+        );
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03),
+                    0 12px 32px rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .gesture-camera__note {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.75rem;
+        background: rgba(0, 0, 0, 0.4);
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+} // .g-layout
+
+// ─── Focus visible ───────────────────────────────────────────
+.g-layout__mood-btn:focus-visible,
+.g-layout__cam-btn:focus-visible,
+.g-search__input:focus-visible,
+.g-idle__search-input:focus-visible,
+.g-song-row:focus-visible,
+.g-rec-card:focus-visible {
+    outline: 3px solid rgba(200, 16, 46, 0.35);
+    outline-offset: 2px;
+}
+
+// ─── Responsive ──────────────────────────────────────────────
+@media (max-width: 1100px) {
+    .g-layout__main-row {
+        grid-template-columns: 240px 240px 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+    .g-layout {
+        height: auto;
+        min-height: 100dvh;
+        overflow: visible;
+
+        &__main-row {
+            grid-template-columns: 1fr;
+            overflow: visible;
+        }
+
+        &__active-col {
+            border-right: none;
+            border-bottom: $border;
+            padding: 1.5rem;
+        }
+
+        &__cam-col {
+            border-right: none;
+            border-bottom: $border;
+        }
+
+        &__queue-col { padding: 1.5rem; }
+        &__song-cols { grid-template-columns: 1fr; }
+
+        &__recommended,
+        &__rec-row { overflow-x: auto; }
+
+        .g-idle {
+            min-height: 300px;
+            background-size: 65% auto;
+            padding: 24px 20px 84px;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .g-layout,
+    .g-layout__recommended,
+    .g-rec-card,
+    .g-rec-card__cover,
+    .g-search__spinner,
+    .g-active__skeleton-cover,
+    .g-rec-card__cover--skeleton,
+    .g-rec-card__skeleton-line,
+    .g-song-row--skeleton .g-song-row__cover,
+    .g-song-row__skeleton-line,
+    .g-idle__search-spinner,
+    .gesture-camera__spinner {
+        transition: none !important;
+        animation: none !important;
+    }
+
+    .g-song-row--skeleton .g-song-row__cover,
+    .g-song-row__skeleton-line {
+        background: rgba(0, 0, 0, 0.07);
+    }
+}

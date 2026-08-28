@@ -1,0 +1,279 @@
+.stepper-outer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 1.5rem;
+  background: rgba(10, 10, 10, 0.75);
+  backdrop-filter: blur(2px);
+}
+
+.stepper-card {
+  width: 100%;
+  max-width: 520px;
+  background: var(--color-text);
+  border: 2px solid var(--color-text);
+  overflow: hidden;
+}
+
+.stepper-indicator-row {
+  display: flex;
+  align-items: center;
+  padding: 1.5rem 2rem 1rem;
+  gap: 0;
+}
+
+.stepper-content {
+  position: relative;
+  overflow: hidden;
+  will-change: height;
+}
+
+.stepper-step {
+  padding: 0 2rem 1rem;
+}
+
+/* Step title */
+.stepper-step h2 {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  color: var(--color-bg);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.stepper-step h2 span {
+  color: var(--color-accent);
+}
+
+/* Step description */
+.stepper-step p {
+  font-size: var(--fs-body);
+  color: #888;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+/* Step image */
+.stepper-step img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  object-position: center;
+  margin: 1rem 0;
+  display: block;
+  border: 1px solid #222;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Footer */
+.stepper-footer {
+  padding: 1rem 2rem 1.5rem;
+  border-top: 1px solid #222;
+}
+
+.stepper-nav {
+  display: flex;
+}
+
+.stepper-nav.spread {
+  justify-content: space-between;
+}
+
+.stepper-nav.end {
+  justify-content: flex-end;
+}
+
+/* Buttons */
+.stepper-btn {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.stepper-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.stepper-btn--back {
+  background: transparent;
+  color: #555;
+  padding: 0.5rem 0;
+}
+
+.stepper-btn--back:hover:not(:disabled) {
+  color: var(--color-bg);
+}
+
+.stepper-btn--next {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  padding: 0.6rem 1.5rem;
+  border: 2px solid var(--color-accent);
+}
+
+.stepper-btn--next:hover:not(:disabled) {
+  background: transparent;
+  color: var(--color-accent);
+}
+
+/* Counter */
+.stepper-counter {
+  margin-top: 1rem;
+  font-size: var(--fs-small);
+  letter-spacing: 0.15em;
+  color: #888;
+  text-transform: uppercase;
+  font-family: var(--font-heading);
+}
+
+/* Dot indicators */
+.stepper-dot-wrap {
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.stepper-dot-wrap.no-pointer {
+  cursor: default;
+}
+
+.stepper-dot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 2px solid #444;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.stepper-dot--active {
+  border-color: #F5F0E8;
+}
+
+.stepper-dot--complete {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.stepper-dot-inner {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background: #F5F0E8;
+}
+
+.stepper-dot-num {
+  font-size: 0.75rem;
+  color: #666;
+  font-family: var(--font-heading);
+}
+
+.stepper-check {
+  width: 1rem;
+  height: 1rem;
+  color: #F5F0E8;
+}
+
+/* Connector */
+.stepper-connector {
+  flex: 1;
+  height: 2px;
+  background: #222;
+  margin: 0 0.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.stepper-connector-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  background-color: var(--color-accent);
+  transition: width 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Privacy note */
+.stepper-privacy {
+  font-size: var(--fs-small);
+  color: #555;
+  margin-top: 0.5rem;
+  font-family: sans-serif;
+}
+
+// ── Onboarding entrance animation ────────────────────────────────────────
+@keyframes overlayFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes cardSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stepper-outer {
+  animation: overlayFadeIn 0.4s ease forwards;
+}
+
+.stepper-card {
+  animation: cardSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+}
+
+.stepper-counter {
+  animation: cardSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+}
+
+/* ⚡️ BUTTER-SMOOTH HARDWARE ACCELERATED TRANSITIONS */
+.stepper-slide {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Moving Forward (Next): Enters from Right (+40px) */
+.slide-enter-next {
+  transform: translate3d(40px, 0, 0);
+  opacity: 0;
+}
+
+/* Moving Backward (Back): Enters from Left (-40px) */
+.slide-enter-prev {
+  transform: translate3d(-40px, 0, 0);
+  opacity: 0;
+}
+
+/* Active State */
+.slide-enter-next.slide-active,
+.slide-enter-prev.slide-active {
+  transform: translate3d(0, 0, 0);
+  opacity: 1;
+}
+
+/* Focus Rings */
+.stepper-btn:focus-visible,
+.stepper-dot-wrap:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+}

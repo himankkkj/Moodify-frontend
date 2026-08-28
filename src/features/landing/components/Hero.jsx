@@ -66,7 +66,15 @@ const Hero = () => {
 
         {/* CTAs */}
         <div className="hero__btns" ref={btnRef}>
-          <Link to="/app" className="hero__btn hero__btn--primary">
+          <Link
+            to="/mood"
+            className="hero__btn hero__btn--primary"
+            onMouseEnter={() => {
+              import("../../mood/services/faceapi.service").then((m) => {
+                m.loadModels?.("/models", () => {});
+              });
+            }}
+          >
             GET STARTED
           </Link>
           <button

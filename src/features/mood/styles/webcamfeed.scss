@@ -1,0 +1,324 @@
+.webcam {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%; // ⚡ Fills parent container height completely (no aspect-ratio locks)
+  min-height: 250px; // Safety fallback for small screens
+  background: #000;
+  border-radius: 4px;
+
+  &__video {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; // Fills frame cleanly without stretching
+    transform: scaleX(-1);
+    display: block;
+  }
+
+  // Hide video when dither hero layer is active
+  &--idle &__video,
+  &--done &__video {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &__dither-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+
+    &--visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    // Force Three.js canvas to fill 100% of height and width
+    .dither-container,
+    canvas {
+      display: block !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+
+  &__placeholder,
+  &__done-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  &__placeholder-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    background: rgba(0, 0, 0, 0.4); // ← dark pill behind text
+    padding: 1rem 1.5rem;
+    backdrop-filter: blur(4px);
+    pointer-events: none;
+
+    p {
+      font-family: var(--font-heading);
+      font-size: 0.8rem;         // ← bigger
+      letter-spacing: 0.25em;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: rgba(245, 240, 232, 0.9); // ← more visible
+    }
+  }
+
+  &__placeholder-icon {
+    width: 40px;               // ← bigger icon
+    height: 40px;
+    color: rgba(245, 240, 232, 0.7);
+
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  // ── SPINNER ───────────────────────────────────────────
+  &__spinner {
+    width: 32px;
+    height: 32px;
+    border: 2px solid rgba(245, 240, 232, 0.1);
+    border-top-color: var(--color-accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  // ── ERROR MESSAGE ─────────────────────────────────────
+  &__error-message {
+    font-family: var(--font-body) !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.03em !important;
+    text-transform: none !important;
+    color: rgba(245, 240, 232, 0.5) !important;
+    text-align: center;
+    max-width: 24ch;
+    line-height: 1.6;
+  }
+
+  // ── SCAN LINE ─────────────────────────────────────────
+  &__scanline {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(to right,
+        transparent,
+        var(--color-accent),
+        transparent);
+    animation: scanline 2s ease-in-out infinite;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  // ── CORNER BRACKETS ───────────────────────────────────
+  &__brackets {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  &__bracket {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-color: var(--color-accent);
+    border-style: solid;
+
+    &--tl {
+      top: 16px;
+      left: 16px;
+      border-width: 2px 0 0 2px
+    }
+
+    &--tr {
+      top: 16px;
+      right: 16px;
+      border-width: 2px 2px 0 0
+    }
+
+    &--bl {
+      bottom: 16px;
+      left: 16px;
+      border-width: 0 0 2px 2px
+    }
+
+    &--br {
+      bottom: 16px;
+      right: 16px;
+      border-width: 0 2px 2px 0
+    }
+  }
+
+  // ── LIVE MOOD LABEL ───────────────────────────────────
+  &__live-mood {
+    position: absolute;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(10, 10, 10, 0.7);
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    z-index: 4;
+    white-space: nowrap;
+  }
+
+  &__live-label {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    color: var(--color-accent);
+  }
+
+  &__live-confidence {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    color: rgba(245, 240, 232, 0.6);
+  }
+
+  // ── SCANNING LABEL ────────────────────────────────────
+  &__scanning-label {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-heading);
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    color: var(--color-accent);
+    z-index: 4;
+    white-space: nowrap;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  // ── PROGRESS BAR ──────────────────────────────────────
+  &__progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(245, 240, 232, 0.1);
+    z-index: 4;
+  }
+
+  &__progress-fill {
+    height: 100%;
+    background: var(--color-accent);
+    transition: width 0.15s linear;
+  }
+
+  &__done-icon {
+    font-size: 3rem;
+    color: var(--color-accent);
+    font-weight: 900;
+    animation: donePopIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  // ── STATE VARIANTS ────────────────────────────────────
+  &--detecting {
+    border: 1px solid rgba(200, 16, 46, 0.3);
+    box-shadow: 0 0 20px rgba(200, 16, 46, 0.1);
+  }
+
+  &--done {
+    border: 1px solid rgba(200, 16, 46, 0.5);
+  }
+
+  &--error {
+    border: 1px solid rgba(200, 16, 46, 0.2);
+  }
+}
+
+// ── ANIMATIONS ────────────────────────────────────────────
+@keyframes scanline {
+  0% {
+    top: 0%
+  }
+
+  50% {
+    top: 95%
+  }
+
+  100% {
+    top: 0%
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1
+  }
+
+  50% {
+    opacity: 0.4
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0
+  }
+
+  to {
+    opacity: 1
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.5);
+    opacity: 0
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg)
+  }
+}
+
+@keyframes donePopIn {
+  from { opacity: 0; transform: scale(0.6); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+// ── REDUCED MOTION ────────────────────────────────────────
+@media (prefers-reduced-motion: reduce) {
+
+  .webcam__scanline,
+  .webcam__scanning-label,
+  .webcam__spinner {
+    animation: none;
+  }
+}

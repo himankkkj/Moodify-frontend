@@ -102,3 +102,9 @@ button {
   padding: var(--space-xl) 0;
 }
 
+// ─── APP THEME (Mood + Gesture pages) ────────────
+[data-theme="app"] {
+  --color-bg:        #FFFFFF;
+  --color-secondary: #6B6B6B;
+}
+

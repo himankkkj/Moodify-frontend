@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { routes } from './routes.jsx'
 import { RouterProvider } from 'react-router-dom'
 import { AuthProvider } from './features/auth/auth.context.jsx'
+import { PlayerProvider } from './features/player/context/player.context'
 import DitherCursor from './features/shared/components/DitherCursor'
 import hoverSrc from './assets/sounds/click.wav'
 
@@ -44,8 +45,10 @@ const App = () => {
 
   return (
     <AuthProvider>
-      <DitherCursor />
-      <RouterProvider router={routes} />
+      <PlayerProvider>
+        <DitherCursor />
+        <RouterProvider router={routes} />
+      </PlayerProvider>
     </AuthProvider>
   )
 }

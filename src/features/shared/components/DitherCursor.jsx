@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
 
 const DitherCursor = ({
-  ditherSize = 6,
-  radius = 0.04,
+  ditherSize = 4,
+  radius = 0.03,
   exponent = 2.0,
   decay = 0.015,
   color = "#C8102E",
@@ -10,9 +10,7 @@ const DitherCursor = ({
 }) => {
   const canvasRef = useRef(null);
 
-  // ── Mutable color ref ────────────────────────────────────────────────────────
-  // Lives outside the draw loop so it can be updated by custom events
-  // without restarting the entire animation.
+
   const rgbRef = useRef({ r: 200, g: 16, b: 46 });
 
   useEffect(() => {
@@ -35,12 +33,19 @@ const DitherCursor = ({
     // Initialise from prop
     rgbRef.current = hexToRgb(color);
 
-    // ── Custom event: any section can fire this to change cursor color ─────────
-    // e.g. window.dispatchEvent(new CustomEvent('moodify:cursor-color', { detail: { color: '#F5F0E8' } }))
     const onColorChange = (e) => {
       rgbRef.current = hexToRgb(e.detail.color);
     };
     window.addEventListener("moodify:cursor-color", onColorChange);
+
+    // Hide/show cursor
+    const visibilityRef = { hidden: false };
+
+    const onHide = () => { visibilityRef.hidden = true; };
+    const onShow = () => { visibilityRef.hidden = false; };
+
+    window.addEventListener('moodify:cursor-hide', onHide);
+    window.addEventListener('moodify:cursor-show', onShow);
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -72,6 +77,11 @@ const DitherCursor = ({
 
     const draw = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (visibilityRef.hidden) {
+        animationId = requestAnimationFrame(draw);
+        return;
+      }
 
       // Read current color from ref — updates instantly when event fires
       const { r, g, b } = rgbRef.current;
@@ -120,6 +130,8 @@ const DitherCursor = ({
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("moodify:cursor-color", onColorChange);
+      window.removeEventListener("moodify:cursor-hide", onHide);
+      window.removeEventListener("moodify:cursor-show", onShow);
     };
   }, [ditherSize, radius, exponent, decay, color, intensity]);
 

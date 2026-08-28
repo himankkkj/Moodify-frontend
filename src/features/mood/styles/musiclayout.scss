@@ -1,0 +1,553 @@
+@mixin ml-shimmer {
+  background: linear-gradient(90deg, rgba(10, 10, 10, 0.04) 25%, rgba(10, 10, 10, 0.09) 50%, rgba(10, 10, 10, 0.04) 75%);
+  background-size: 200% 100%;
+  animation: ml-shimmer 1.2s ease infinite;
+}
+
+@keyframes ml-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.music-layout {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 80px); // 80px = player bar height
+  overflow: hidden;
+
+  // ── TOP ──────────────────────────────────────────────
+  &__top {
+    flex: 1;
+    min-height: 0;
+    display: grid;
+    grid-template-columns: minmax(340px, 38%) 1fr;
+    border-bottom: 1px solid rgba(10, 10, 10, 0.08);
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // ── CURRENT SONG ─────────────────────────────────────
+  &__current {
+    position: relative;
+    min-height: 0;
+    overflow: hidden;
+    border-right: 1px solid rgba(10, 10, 10, 0.08);
+    background: #0a0a0a;
+    padding: 16px;
+    box-sizing: border-box;
+  }
+
+  &__cover-wrap {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    width: auto;
+    height: auto;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow:
+      0 4px 24px rgba(0, 0, 0, 0.35),
+      0 0 0 1px rgba(255, 255, 255, 0.06);
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 8px;
+      pointer-events: none;
+      background: radial-gradient(
+        ellipse at center,
+        transparent 55%,
+        rgba(0, 0, 0, 0.25) 100%
+      );
+    }
+  }
+
+  &__cover,
+  &__song-cover img,
+  &__queue-item img {
+    opacity: 0;
+    transition: opacity 0.25s ease;
+
+    &.is-loaded {
+      opacity: 1;
+    }
+  }
+
+  &__cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__cover-placeholder {
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 10, 0.06);
+  }
+
+  &__current-info {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    z-index: 1;
+    padding: 24px;
+    border-radius: 0 0 8px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.8) 0%,
+      rgba(0, 0, 0, 0.4) 50%,
+      transparent 100%
+    );
+    color: #fff;
+    pointer-events: none;
+  }
+
+  &__mood-tag {
+    font-family: var(--font-heading);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    color: var(--color-accent);
+    text-transform: uppercase;
+  }
+
+  &__song-name {
+    font-family: var(--font-heading);
+    font-size: clamp(20px, 2.5vw, 28px);
+    line-height: 1.15;
+    letter-spacing: 0.03em;
+    color: #fff;
+  }
+
+  &__artist {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  // ── SONG LIST (RIGHT PANEL) ───────────────────────────
+  &__list {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    padding: 16px 24px 16px 32px;
+  }
+
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  &__toolbar-left {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  &__gesture-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.5rem 0.9rem;
+    border: 1.5px solid rgba(10, 10, 10, 0.14);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--color-text, #0a0a0a);
+    font-family: var(--font-heading);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+
+    &:hover {
+      border-color: var(--color-accent, #c8102e);
+      color: var(--color-accent, #c8102e);
+      background: rgba(200, 16, 46, 0.06);
+    }
+
+    &:focus-visible {
+      outline: 3px solid rgba(200, 16, 46, 0.28);
+      outline-offset: 2px;
+    }
+  }
+
+  &__mood-tag {
+    font-family: var(--font-heading);
+    font-size: 20px;
+    line-height: 28px;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    color: var(--color-accent);
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1 1 auto;
+    text-align: center;
+    min-width: 0;
+  }
+
+  &__detect-btn {
+    font-family: var(--font-heading);
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    border-radius: 0; // ⚡️ Flat sharp corners (no rounding)
+
+    background: var(--color-text); // Black background
+    color: var(--color-bg);        // White / light text
+    padding: 0.65rem 1.25rem;
+    flex-shrink: 0;
+
+    &:hover {
+      opacity: 0.85;
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+  }
+
+  // minimal separator
+  &__divider {
+    flex-shrink: 0;
+    height: 1px;
+    width: 100%;
+    background: rgba(10, 10, 10, 0.1);
+    margin: 16px 0;
+  }
+
+  &__list-header {
+    flex-shrink: 0;
+    padding: 0 0 16px;            // a bit more air under the title
+    display: flex;
+    align-items: center;
+  }
+
+  &__list-label {
+    font-family: var(--font-heading);
+    font-size: 1.125rem;              // ~18px
+    line-height: 24px;
+    letter-spacing: 0.14em;
+    font-weight: 500;
+    color: var(--color-secondary);     // was secondary — harder to see
+    text-transform: uppercase;
+  }
+
+  &__songs {
+    contain: layout style;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 24px;               // slightly tighter columns, taller feel via row size
+    align-content: stretch;       // use vertical space
+    scroll-padding-block: 8px;    // small inset when scrolling to edge
+  }
+
+  &__songs-col {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;                    // was 8px
+    height: 100%;
+  }
+
+  &__song-row {
+    content-visibility: auto;
+    contain-intrinsic-size: 64px;
+    display: grid;
+    grid-template-columns: 28px 48px 1fr auto;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    background: rgba(10, 10, 10, 0.03);
+    border: 1px solid transparent; // Smooth transition to active border
+    transition: all var(--transition-fast, 0.2s);
+    cursor: pointer;
+
+    &:hover {
+      background: rgba(10, 10, 10, 0.06);
+      border-color: rgba(10, 10, 10, 0.08);
+    }
+
+    // ⚡️ Distinct Active "Now Playing" Card
+    &--active {
+      background: rgba(200, 16, 46, 0.08) !important;       // Deeper accent tint
+      border: 1px solid rgba(200, 16, 46, 0.3) !important;  // Clear accent border outline
+      box-shadow: 0 2px 12px rgba(200, 16, 46, 0.12);         // Subtle active glow
+      scroll-margin-block: 8px;
+
+      .music-layout__song-title {
+        color: var(--color-accent);                         // Highlight song title in red/accent
+        font-weight: 500;
+      }
+
+      .music-layout__song-num {
+        color: var(--color-accent);
+        font-size: 13px;
+      }
+    }
+  }
+
+  &__song-row--skeleton {
+    pointer-events: none;
+    cursor: default;
+
+    .music-layout__song-num,
+    .music-layout__song-dur {
+      visibility: hidden;
+    }
+
+    .music-layout__song-cover,
+    .music-layout__skeleton-cover {
+      width: 48px;
+      height: 48px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    .music-layout__skeleton-line--name {
+      width: 70%;
+      height: 12px;
+      margin-bottom: 6px;
+      border-radius: 2px;
+    }
+
+    .music-layout__skeleton-line--artist {
+      width: 45%;
+      height: 10px;
+      border-radius: 2px;
+    }
+  }
+
+  &__song-num {
+    font-size: 12px;              // was 0.65rem
+    font-family: var(--font-heading);
+    color: var(--color-secondary);
+    letter-spacing: 0.05em;
+    text-align: right;
+
+    .music-layout__song-row--active & {
+      color: var(--color-accent);
+    }
+  }
+
+  &__song-cover {
+    width: 48px;                  // was 40
+    height: 48px;
+    border-radius: 4px;
+    overflow: hidden;
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+  }
+
+  &__song-cover-placeholder {
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 10, 0.08);
+  }
+
+  &__song-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  &__song-title {
+    font-family: var(--font-heading);
+    font-size: 14px;              // was 0.8rem
+    line-height: 20px;
+    letter-spacing: 0.02em;
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__song-artist {
+    font-size: 12px;              // was 0.72rem
+    line-height: 16px;
+    color: var(--color-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__song-dur {
+    font-size: 12px;
+    color: var(--color-secondary);
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+  }
+
+  // ── QUEUE / UP NEXT ───────────────────────────────────
+  &__queue {
+    flex-shrink: 0;
+    width: 100%;
+    z-index: 2;
+    background: var(--color-bg, #fff);
+    padding: 16px 24px 20px;
+    border-top: 1px solid rgba(10, 10, 10, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-sizing: border-box;
+  }
+
+  &__queue-row {
+    contain: layout style;
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  &__queue-item {
+    content-visibility: auto;
+    contain-intrinsic-size: 160px 190px;
+    flex: 1 1 0px; // ⚡️ Distributes items equally to fill 100% of row width
+    min-width: 0; // ⚡️ Prevents overflow & allows text ellipsis
+    max-width: 180px; // ⚡️ Prevents cards from becoming giant if only 1-2 songs exist
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+    transition: opacity var(--transition-fast, 0.2s);
+
+    &:hover {
+      opacity: 0.85;
+    }
+
+    img,
+    .music-layout__queue-placeholder {
+      width: 100%;
+      aspect-ratio: 1;
+      height: auto;
+      object-fit: cover;
+      border-radius: 8px;
+      display: block;
+      background: rgba(10, 10, 10, 0.06);
+    }
+  }
+
+  &__queue-placeholder {
+    background: rgba(10, 10, 10, 0.06);
+  }
+
+  &__queue-name {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    line-height: 18px;
+    letter-spacing: 0.02em;
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+  }
+
+  &__queue-artist {
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--color-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+  }
+  &__skeleton-cover {
+    @include ml-shimmer;
+    border-radius: 4px;
+  }
+
+  &__skeleton-line {
+    border-radius: 4px;
+    @include ml-shimmer;
+
+    &--name { width: 75%; height: 12px; margin-bottom: 4px; }
+    &--artist { width: 50%; height: 10px; }
+    &--title { width: 65%; height: 24px; margin-bottom: 8px; }
+  }
+
+  &__song-row--skeleton {
+    pointer-events: none;
+    background: rgba(10, 10, 10, 0.02);
+    border-color: transparent;
+  }
+
+  &__queue-item--skeleton {
+    pointer-events: none;
+  }
+}
+
+// ── Responsive media query overrides ─────────────────────────────────────
+@media (max-width: 900px) {
+  .music-layout__top {
+    grid-template-columns: 1fr;
+  }
+
+  .music-layout__songs {
+    grid-template-columns: 1fr;
+  }
+
+  .music-layout__list {
+    padding: 0 16px 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .music-layout__queue {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 700px) {
+  .music-layout__toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .music-layout__mood-tag {
+    text-align: left;
+    order: -1;
+  }
+
+  .music-layout__gesture-btn,
+  .music-layout__detect-btn {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .music-layout__skeleton-cover,
+  .music-layout__skeleton-line {
+    animation: none !important;
+  }
+}
