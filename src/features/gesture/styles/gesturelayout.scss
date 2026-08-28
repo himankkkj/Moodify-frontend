@@ -208,30 +208,40 @@ $accent-ring: 0 0 0 3px rgba(200, 16, 46, 0.15);
         position: relative;
 
         &.is-idle {
-            padding: 24px;
-            
+            padding: 16px 20px 12px;
+            gap: 0;
+            // Critical: column flex so feed shrinks, button never leaves viewport
+            justify-content: flex-start;
+
             .g-layout__cam-feed {
-                // THE FIX: 1 1 0% + min-height: 0 ensures this section shrinks 
-                // when the player pops up, so the button NEVER disappears.
-                flex: 1 1 0%; 
-                min-height: 0; 
+                flex: 1 1 auto;
+                min-height: 0;          // allow shrink
+                max-height: 42%;        // never eat button space on short screens
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                overflow: hidden;
             }
-            
+
             .g-layout__cam-guide {
-                flex: 0 0 auto; // Never shrink text
-                padding: 0;
-                margin-top: 16px;
+                flex: 1 1 auto;
+                min-height: 0;          // allow shrink
+                overflow-x: hidden;
+                overflow-y: auto;       // scroll controls if height is tight
+                overscroll-behavior: contain;
+                padding: 8px 0 0;
+                margin-top: 8px;
+                -webkit-overflow-scrolling: touch;
             }
-            
+
             .g-layout__cam-action {
-                flex: 0 0 auto; // Never shrink button
-                padding: 20px 0 0 0;
-                margin-top: 16px;
+                flex: 0 0 auto;         // NEVER shrink — button always visible
+                padding: 12px 0 4px;
+                margin-top: 8px;
                 border-top: 1px solid rgba(255, 255, 255, 0.06);
-                background: transparent;
+                background: #121212;
+                position: relative;
+                z-index: 5;
             }
         }
 
@@ -267,11 +277,12 @@ $accent-ring: 0 0 0 3px rgba(200, 16, 46, 0.15);
 
     &__cam-action {
         flex-shrink: 0;
+        flex-grow: 0;
         padding: 10px 16px 16px;
         margin-top: auto;
         border-top: 1px solid rgba(255, 255, 255, 0.06);
         background: #0a0a0a;
-        z-index: 2;
+        z-index: 5;
     }
 
     &__cam-btn {
@@ -281,15 +292,17 @@ $accent-ring: 0 0 0 3px rgba(200, 16, 46, 0.15);
         gap: 8px;
         width: 100%;
         min-height: 44px;
+        height: 44px;               // fixed so layout math is stable
         font-family: var(--font-heading);
         font-size: 0.7rem;
         letter-spacing: 0.12em;
-        padding: 0.75rem 1rem;
+        padding: 0 1rem;
         border: 1.5px solid rgba(255, 255, 255, 0.35);
         background: transparent;
         color: #fff;
         cursor: pointer;
         text-transform: uppercase;
+        border-radius: $radius-md;
         transition: background 0.2s, color 0.2s, border-color 0.2s;
 
         &-icon {
@@ -1006,11 +1019,11 @@ $accent-ring: 0 0 0 3px rgba(200, 16, 46, 0.15);
     }
 
     .gesture-camera__vinyl {
-        width: 100%;
-        max-width: 160px; // Won't grow larger than this
-        aspect-ratio: 1; // Keeps it perfectly round
+        width: min(100%, 160px);
+        max-width: 160px;
+        max-height: min(160px, 100%);
+        aspect-ratio: 1;
         height: auto;
-        max-height: 100%; // CRITICAL: Shrinks vertically if needed
         border-radius: 50%;
         
         // Cool textured vinyl look like the reference
@@ -1092,6 +1105,158 @@ $accent-ring: 0 0 0 3px rgba(200, 16, 46, 0.15);
             background-size: 65% auto;
             padding: 24px 20px 84px;
         }
+    }
+}
+
+// Wide but short screens (ultrawide laptops, short browser chrome, player open)
+@media (max-height: 800px) {
+    .g-layout {
+        &__cam-col {
+            padding: 10px;
+        }
+
+        &__cam-shell.is-idle {
+            padding: 12px 14px 8px;
+
+            .g-layout__cam-feed {
+                max-height: 36%;
+            }
+
+            .g-layout__cam-guide {
+                margin-top: 4px;
+            }
+
+            .g-layout__cam-action {
+                padding-top: 10px;
+                margin-top: 6px;
+            }
+        }
+
+        // Compress gesture guide copy
+        .gesture-display {
+            &__status {
+                margin-bottom: 10px;
+                gap: 2px;
+            }
+
+            &__status-title {
+                font-size: 0.95rem;
+            }
+
+            &__status-sub {
+                font-size: 0.72rem;
+            }
+
+            &__list {
+                gap: 4px;
+            }
+
+            &__row {
+                padding: 4px 0;
+                gap: 8px;
+            }
+        }
+
+        .gesture-camera__vinyl {
+            max-width: 120px;
+        }
+
+        // Recommended row takes less vertical space
+        &__recommended {
+            padding: 10px 16px 12px !important;
+            gap: 8px;
+        }
+
+        .g-rec-card {
+            max-width: 140px;
+
+            &__name { font-size: 12px; line-height: 16px; }
+            &__artist { font-size: 11px; line-height: 14px; }
+        }
+    }
+}
+
+@media (max-height: 700px) {
+    .g-layout {
+        &__cam-shell.is-idle {
+            .g-layout__cam-feed {
+                max-height: 28%;
+            }
+
+            // Hide decorative vinyl area earlier — keep guide + button
+            .g-layout__cam-feed {
+                // if still too tight, collapse feed hard
+                flex: 0 1 72px;
+                min-height: 64px;
+            }
+        }
+
+        .gesture-display {
+            // Hide subtitle to free space
+            &__status-sub {
+                display: none;
+            }
+
+            &__section {
+                margin-bottom: 6px;
+            }
+
+            // Slightly denser controls
+            &__row-hint {
+                font-size: 0.65rem;
+            }
+        }
+
+        .gesture-camera__vinyl {
+            max-width: 88px;
+        }
+
+        .gesture-camera__note {
+            width: 36px;
+            height: 36px;
+            font-size: 1.1rem;
+        }
+    }
+}
+
+// Extreme short height (player + browser UI eating space)
+@media (max-height: 620px) {
+    .g-layout {
+        &__cam-shell.is-idle {
+            .g-layout__cam-feed {
+                display: none; // last resort: drop vinyl, keep guide + START CAMERA
+            }
+
+            .g-layout__cam-guide {
+                flex: 1 1 auto;
+                min-height: 0;
+            }
+        }
+
+        // Optional: collapse recommended row height further
+        &__recommended {
+            padding: 8px 12px 8px !important;
+        }
+    }
+}
+
+// Prefer button over long guide when BOTH short and not-too-wide
+@media (max-height: 720px) and (min-width: 901px) {
+    .g-layout__main-row {
+        // Give camera column a guaranteed minimum readable height share
+        min-height: 0;
+    }
+
+    .g-layout__cam-col {
+        min-height: 0;
+    }
+
+    .g-layout__cam-shell.is-idle .g-layout__cam-action {
+        // sticky-like safety inside the card
+        position: sticky;
+        bottom: 0;
+        background: #121212;
+        box-shadow: 0 -8px 16px rgba(0, 0, 0, 0.35);
     }
 }
 
