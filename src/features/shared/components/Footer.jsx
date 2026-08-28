@@ -43,7 +43,7 @@ const Footer = () => {
 
         {/* bottom bar */}
         <div className="footer__bottom">
-          <span>© 2024 MOODIFY. ALL RIGHTS RESERVED.</span>
+          <span>© 2026 MOODIFY. ALL RIGHTS RESERVED.</span>
           <span>MUSIC THAT READS YOU.</span>
         </div>
 
