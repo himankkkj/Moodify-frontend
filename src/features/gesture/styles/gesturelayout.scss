@@ -198,25 +198,23 @@ $accent-ring: 0 0 0 3px rgba(200, 16, 46, 0.15);
     &__cam-shell {
         width: 100%;
         height: 100%;
+        max-height: 100%;
         display: flex;
         flex-direction: column;
         min-height: 0;
-        overflow: hidden;
-        background: #121212; // Sleek dark card background like reference
-        border-radius: 12px; // Rounded corners for the card
+        overflow: hidden;          // clip only — NO scroll
+        background: #121212;
+        border-radius: 12px;
         box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
         position: relative;
 
         &.is-idle {
-            padding: 16px 20px 12px;
-            gap: 0;
-            // Critical: column flex so feed shrinks, button never leaves viewport
-            justify-content: flex-start;
+            padding: 20px 20px 16px;
+            gap: 12px;
 
             .g-layout__cam-feed {
                 flex: 1 1 auto;
-                min-height: 0;          // allow shrink
-                max-height: 42%;        // never eat button space on short screens
+                min-height: 0;       // feed shrinks first
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -224,24 +222,19 @@ $accent-ring: 0 0 0 3px rgba(200, 16, 46, 0.15);
             }
 
             .g-layout__cam-guide {
-                flex: 1 1 auto;
-                min-height: 0;          // allow shrink
-                overflow-x: hidden;
-                overflow-y: auto;       // scroll controls if height is tight
-                overscroll-behavior: contain;
-                padding: 8px 0 0;
-                margin-top: 8px;
-                -webkit-overflow-scrolling: touch;
+                flex: 0 1 auto;      // can shrink a little
+                min-height: 0;
+                overflow: hidden;    // NO overflow-y: auto
+                padding: 0;
+                margin: 0;
             }
 
             .g-layout__cam-action {
-                flex: 0 0 auto;         // NEVER shrink — button always visible
-                padding: 12px 0 4px;
-                margin-top: 8px;
+                flex: 0 0 auto;      // NEVER shrink — always visible
+                margin-top: auto;    // pin to bottom of card
+                padding-top: 12px;
                 border-top: 1px solid rgba(255, 255, 255, 0.06);
                 background: #121212;
-                position: relative;
-                z-index: 5;
             }
         }
 
@@ -251,6 +244,7 @@ $accent-ring: 0 0 0 3px rgba(200, 16, 46, 0.15);
                 inset: 0;
                 z-index: 1;
             }
+
             .gesture-camera,
             .gesture-camera__feed,
             .gesture-camera__video {
@@ -259,14 +253,15 @@ $accent-ring: 0 0 0 3px rgba(200, 16, 46, 0.15);
                 object-fit: cover;
                 display: block;
             }
+
             .g-layout__cam-action {
                 position: absolute;
                 inset: auto 0 0 0;
                 z-index: 3;
-                padding: 24px 16px 16px;
-                background: linear-gradient(to top, rgba(0,0,0,0.92) 40%, transparent);
-                border-top: none;
                 margin-top: 0;
+                padding: 24px 16px 16px;
+                border-top: none;
+                background: linear-gradient(to top, rgba(0,0,0,0.92) 40%, transparent);
             }
         }
     }
@@ -276,12 +271,8 @@ $accent-ring: 0 0 0 3px rgba(200, 16, 46, 0.15);
     }
 
     &__cam-action {
+        flex: 0 0 auto;
         flex-shrink: 0;
-        flex-grow: 0;
-        padding: 10px 16px 16px;
-        margin-top: auto;
-        border-top: 1px solid rgba(255, 255, 255, 0.06);
-        background: #0a0a0a;
         z-index: 5;
     }
 
@@ -291,8 +282,8 @@ $accent-ring: 0 0 0 3px rgba(200, 16, 46, 0.15);
         justify-content: center;
         gap: 8px;
         width: 100%;
+        height: 44px;
         min-height: 44px;
-        height: 44px;               // fixed so layout math is stable
         font-family: var(--font-heading);
         font-size: 0.7rem;
         letter-spacing: 0.12em;
@@ -318,13 +309,17 @@ $accent-ring: 0 0 0 3px rgba(200, 16, 46, 0.15);
         &--stop {
             border-color: var(--color-accent);
             color: var(--color-accent);
+
             &:hover:not(:disabled) {
                 background: var(--color-accent);
                 color: #fff;
             }
         }
 
-        &:disabled { opacity: 0.4; cursor: not-allowed; }
+        &:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
     }
 
     // ─── Gesture Display (Text & Controls) ───
@@ -1108,155 +1103,84 @@ $accent-ring: 0 0 0 3px rgba(200, 16, 46, 0.15);
     }
 }
 
-// Wide but short screens (ultrawide laptops, short browser chrome, player open)
-@media (max-height: 800px) {
+// ── Short height: compress, don't scroll (Spotify-style) ──
+@media (max-height: 820px) {
     .g-layout {
-        &__cam-col {
-            padding: 10px;
-        }
+        &__cam-col { padding: 12px; }
 
         &__cam-shell.is-idle {
-            padding: 12px 14px 8px;
-
-            .g-layout__cam-feed {
-                max-height: 36%;
-            }
-
-            .g-layout__cam-guide {
-                margin-top: 4px;
-            }
-
-            .g-layout__cam-action {
-                padding-top: 10px;
-                margin-top: 6px;
-            }
+            padding: 14px 16px 12px;
+            gap: 8px;
         }
 
-        // Compress gesture guide copy
         .gesture-display {
-            &__status {
-                margin-bottom: 10px;
-                gap: 2px;
-            }
-
-            &__status-title {
-                font-size: 0.95rem;
-            }
-
-            &__status-sub {
-                font-size: 0.72rem;
-            }
-
-            &__list {
-                gap: 4px;
-            }
-
-            &__row {
-                padding: 4px 0;
-                gap: 8px;
-            }
+            &__status { margin-bottom: 10px; gap: 2px; }
+            &__status-title { font-size: 1rem; }
+            &__status-sub { font-size: 0.72rem; }
+            &__section { margin: 0 0 6px; }
+            &__list { gap: 4px; }
+            &__row { padding: 3px 0; gap: 8px; }
+            &__row-label { font-size: 0.7rem; }
+            &__row-hint { font-size: 0.65rem; gap: 6px; }
         }
 
-        .gesture-camera__vinyl {
-            max-width: 120px;
+        .gesture-camera__vinyl { max-width: 120px; }
+    }
+}
+
+@media (max-height: 720px) {
+    .g-layout {
+        &__cam-shell.is-idle {
+            padding: 12px 14px 10px;
+            gap: 6px;
         }
 
-        // Recommended row takes less vertical space
+        // Hide secondary copy
+        .gesture-display__status-sub { display: none; }
+
+        .gesture-display {
+            &__status { margin-bottom: 6px; }
+            &__section { margin-bottom: 4px; font-size: 0.6rem; }
+            &__row { padding: 2px 0; }
+            &__row-emoji { font-size: 0.9rem; }
+        }
+
+        .gesture-camera__vinyl { max-width: 96px; }
+        .gesture-camera__note {
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+        }
+
+        // Recommended eats less vertical space
         &__recommended {
             padding: 10px 16px 12px !important;
             gap: 8px;
         }
-
-        .g-rec-card {
-            max-width: 140px;
-
-            &__name { font-size: 12px; line-height: 16px; }
-            &__artist { font-size: 11px; line-height: 14px; }
-        }
     }
 }
 
-@media (max-height: 700px) {
+@media (max-height: 640px) {
     .g-layout {
-        &__cam-shell.is-idle {
-            .g-layout__cam-feed {
-                max-height: 28%;
-            }
-
-            // Hide decorative vinyl area earlier — keep guide + button
-            .g-layout__cam-feed {
-                // if still too tight, collapse feed hard
-                flex: 0 1 72px;
-                min-height: 64px;
-            }
+        // Drop vinyl entirely — CTA + controls stay
+        &__cam-shell.is-idle .g-layout__cam-feed {
+            display: none;
         }
 
         .gesture-display {
-            // Hide subtitle to free space
-            &__status-sub {
-                display: none;
-            }
-
-            &__section {
-                margin-bottom: 6px;
-            }
-
-            // Slightly denser controls
-            &__row-hint {
-                font-size: 0.65rem;
-            }
+            &__status-icon { display: none; }
+            &__status { margin-bottom: 4px; }
+            &__status-title { font-size: 0.9rem; }
+            &__list { gap: 2px; }
         }
 
-        .gesture-camera__vinyl {
-            max-width: 88px;
+        &__cam-shell.is-idle .g-layout__cam-action {
+            padding-top: 8px;
         }
 
-        .gesture-camera__note {
-            width: 36px;
-            height: 36px;
-            font-size: 1.1rem;
-        }
-    }
-}
-
-// Extreme short height (player + browser UI eating space)
-@media (max-height: 620px) {
-    .g-layout {
-        &__cam-shell.is-idle {
-            .g-layout__cam-feed {
-                display: none; // last resort: drop vinyl, keep guide + START CAMERA
-            }
-
-            .g-layout__cam-guide {
-                flex: 1 1 auto;
-                min-height: 0;
-            }
-        }
-
-        // Optional: collapse recommended row height further
         &__recommended {
             padding: 8px 12px 8px !important;
         }
-    }
-}
-
-// Prefer button over long guide when BOTH short and not-too-wide
-@media (max-height: 720px) and (min-width: 901px) {
-    .g-layout__main-row {
-        // Give camera column a guaranteed minimum readable height share
-        min-height: 0;
-    }
-
-    .g-layout__cam-col {
-        min-height: 0;
-    }
-
-    .g-layout__cam-shell.is-idle .g-layout__cam-action {
-        // sticky-like safety inside the card
-        position: sticky;
-        bottom: 0;
-        background: #121212;
-        box-shadow: 0 -8px 16px rgba(0, 0, 0, 0.35);
     }
 }
 
