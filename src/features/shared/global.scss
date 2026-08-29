@@ -1,6 +1,12 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// global.scss
+// Global typography, design tokens, responsive scales, and resets
+// ─────────────────────────────────────────────────────────────────────────────
+
 // ─── FONTS ───────────────────────────────────────
 @import '@fontsource/bebas-neue/index.css';
 @import '@fontsource/inter/index.css';
+
 // ─── CSS VARIABLES ───────────────────────────────
 :root {
   // Colors
@@ -18,16 +24,26 @@
   --fs-hero:           clamp(4rem, 12vw, 12rem);
   --fs-h1:             clamp(2.5rem, 6vw, 6rem);
   --fs-h2:             clamp(2rem, 4vw, 4rem);
-  --fs-h3:             clamp(1.2rem, 2vw, 2rem);
-  --fs-body:           clamp(0.9rem, 1.2vw, 1.1rem);
-  --fs-small:          0.8rem;
+  --fs-h3:             clamp(1rem, 1.8vw, 1.5rem);
+  --fs-body:           clamp(0.875rem, 1.1vw, 1rem);
+  --fs-small:          clamp(0.7rem, 0.9vw, 0.8rem);
+  --fs-label:          0.65rem;
+  --fs-button:         0.7rem;
 
   // Spacing
+  --space-2xs:         0.25rem;
   --space-xs:          0.5rem;
   --space-sm:          1rem;
   --space-md:          2rem;
   --space-lg:          4rem;
   --space-xl:          8rem;
+  --space-3xl:         12rem;
+
+  // Radii & Shadows
+  --radius-card:       10px;
+  --radius-control:    8px;
+  --shadow-card:       0 4px 16px rgba(0, 0, 0, 0.06);
+  --shadow-focus:      0 8px 28px rgba(200, 16, 46, 0.18);
 
   // Transitions
   --transition-fast:   0.2s ease;
@@ -53,18 +69,21 @@ body {
   font-size: var(--fs-body);
   line-height: 1.6;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 // ─── TYPOGRAPHY ──────────────────────────────────
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  line-height: 1;
-  letter-spacing: 0.02em;
+  line-height: 1.05;
+  letter-spacing: 0.04em;
 }
 
 p {
   font-family: var(--font-body);
-  color: var(--color-secondary);
+  color: inherit;
 }
 
 a {
@@ -91,20 +110,46 @@ button {
   color: var(--color-accent);
 }
 
+.text-secondary {
+  color: var(--color-secondary);
+}
+
 .container {
   width: 100%;
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 var(--space-md);
+  padding: 0 clamp(var(--space-sm), 4vw, var(--space-md));
 }
 
 .section {
-  padding: var(--space-xl) 0;
+  padding: clamp(var(--space-lg), 8vw, var(--space-xl)) 0;
 }
 
 // ─── APP THEME (Mood + Gesture pages) ────────────
 [data-theme="app"] {
-  --color-bg:        #FFFFFF;
-  --color-secondary: #6B6B6B;
+  --color-bg:             #FFFFFF;
+  --color-secondary:      #6B6B6B;
+  --color-surface:        #F7F7F7;
+  --color-surface-dark:   #141414;   /* camera MVP panel */
+  --color-surface-dark-2: #1C1C1C;
+  --color-border:         rgba(10, 10, 10, 0.08);
+  --color-on-dark:        #FFFFFF;
+  --color-on-dark-muted:  rgba(255, 255, 255, 0.55);
 }
 
+// ─── RESPONSIVE & ACCESSIBILITY ──────────────────
+@media (max-width: 600px) {
+  :root {
+    --fs-small: 0.72rem;
+    --space-lg: 2.5rem;
+    --space-xl: 4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0s;
+    --transition-mid: 0s;
+    --transition-slow: 0s;
+  }
+}

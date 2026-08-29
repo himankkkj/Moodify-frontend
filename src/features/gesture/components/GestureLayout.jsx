@@ -5,6 +5,7 @@ import { usePlayerState, usePlayerActions } from '../../player/context/player.co
 import { useGestureQueue } from '../hooks/useGestureQueue'
 import GestureCamera from './GestureCamera'
 import '../styles/gesturelayout.scss'
+import '../styles/gesturelayout.responsive.scss'
 
 const GestureDisplay = lazy(() => import('./GestureDisplay'))
 

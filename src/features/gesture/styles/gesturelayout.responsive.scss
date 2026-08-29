@@ -1,0 +1,942 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// gesturelayout.responsive.scss
+// Production responsive overrides for Large Desktop, Laptops, Tablets & Mobile
+// ─────────────────────────────────────────────────────────────────────────────
+
+$player-height-mobile: 72px;
+$player-height: 80px;
+$topbar-height-mobile: 56px;
+$touch-target-min: 44px;
+$border-color: rgba(10, 10, 10, 0.08);
+
+// ─── Shared cover fix (prevents image spill) ────────────────────────────────
+@mixin cover-box($size: 44px, $radius: 4px) {
+  width: $size;
+  height: $size;
+  min-width: $size;
+  min-height: $size;
+  max-width: $size;
+  max-height: $size;
+  flex-shrink: 0;
+  border-radius: $radius;
+  overflow: hidden;
+  position: relative;
+  background: rgba(0, 0, 0, 0.06);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    border-radius: inherit;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DESKTOP TIER — Laptops & Medium Monitors (1024px – 1600px)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ─── LARGE DESKTOP / MONITORS (min-width: 1600px) ────────────────────────────
+@media (min-width: 1600px) {
+  .g-layout {
+    &__main-row {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.3fr);
+    }
+
+    &__active-col,
+    &__cam-col,
+    &__queue-col {
+      padding: 24px;
+    }
+
+    &__list-label,
+    &__rec-label {
+      font-size: 1.25rem;
+    }
+
+    .g-song-row {
+      max-height: 70px;
+      padding: 8px 14px;
+
+      &__name { font-size: 0.85rem; }
+      &__artist { font-size: 0.72rem; }
+    }
+
+    .gesture-display {
+      &__status-title { font-size: 1.1rem; }
+      &__row-label { font-size: 0.78rem; }
+      &__row-hint { font-size: 0.72rem; }
+    }
+  }
+}
+
+// ─── STANDARD LAPTOP (1280px – 1599px) — MacBook Pro 14/16, most Windows ────
+@media (min-width: 1280px) and (max-width: 1599px) {
+  .g-layout {
+    &__main-row {
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 1.1fr) minmax(0, 1.25fr);
+    }
+
+    &__active-col,
+    &__cam-col,
+    &__queue-col {
+      padding: 18px;
+    }
+
+    &__active-wrap {
+      .g-layout--playing & {
+        aspect-ratio: auto;
+        max-height: 100%;
+      }
+    }
+
+    .g-song-row {
+      max-height: 64px;
+      grid-template-columns: 28px 44px 1fr auto;
+      padding: 7px 12px;
+    }
+  }
+}
+
+// ─── SMALL LAPTOP / 13" (1100px – 1279px) — MacBook Air 13, ThinkPad ─────────
+@media (min-width: 1100px) and (max-width: 1279px) {
+  .g-layout {
+    &__main-row {
+      grid-template-columns: minmax(220px, 0.9fr) minmax(300px, 1fr) minmax(0, 1.3fr);
+    }
+
+    &__topbar {
+      padding: 0.65rem 1.25rem;
+    }
+
+    &__active-col,
+    &__cam-col {
+      padding: 14px;
+    }
+
+    &__queue-col {
+      padding: 14px 16px;
+    }
+
+    &__cam-shell.is-idle {
+      padding: 14px;
+
+      .g-layout__cam-feed .gesture-camera__vinyl {
+        width: clamp(48px, 8vh, 88px);
+        height: clamp(48px, 8vh, 88px);
+      }
+    }
+
+    .gesture-display {
+      &__status-title { font-size: 0.95rem; }
+      &__status-sub { font-size: 0.72rem; }
+      &__section { font-size: 0.58rem; }
+      &__row-label { font-size: 0.7rem; }
+      &__row-hint { font-size: 0.65rem; }
+    }
+
+    .g-song-row {
+      max-height: 58px;
+      min-height: 48px;
+      grid-template-columns: 24px 40px 1fr auto;
+      gap: 10px;
+      padding: 6px 10px;
+
+      &__cover {
+        width: 40px;
+        height: 40px;
+      }
+
+      &__name { font-size: 0.76rem; }
+      &__artist { font-size: 0.66rem; }
+    }
+
+    &__list-label,
+    &__rec-label {
+      font-size: 1rem;
+      letter-spacing: 0.12em;
+    }
+
+    .g-active {
+      &__name { font-size: 1.15rem; }
+      &__artist { font-size: 0.75rem; }
+      &__info { padding: 1rem; }
+    }
+
+    .g-idle {
+      padding: 24px 22px 88px;
+
+      &__heading { font-size: 1.75rem; }
+      &__subtitle { font-size: 0.78rem; }
+    }
+  }
+}
+
+// ─── MID DESKTOP GAP (901px – 1300px) — Empty column prevention ───────────────
+@media (min-width: 901px) and (max-width: 1300px) {
+  .g-layout {
+    &__main-row {
+      grid-template-columns: minmax(200px, 0.95fr) minmax(260px, 1fr) minmax(0, 1.35fr);
+      align-items: stretch;
+    }
+
+    &__cam-shell {
+      max-height: 100%;
+    }
+
+    &__queue-col {
+      display: flex;
+      min-height: 0;
+    }
+
+    .g-song-row {
+      max-height: 58px;
+      min-height: 48px;
+    }
+
+    &__recommended {
+      padding: 6px 16px 6px;
+    }
+
+    .g-rec-card__name { font-size: 12px; }
+    .g-rec-card__artist { font-size: 11px; }
+  }
+}
+
+// ─── SHORT HEIGHT (max-height: 850px) on Desktop/Laptops ─────────────────────
+@media (max-height: 850px) and (min-width: 901px) {
+  .g-layout {
+    .g-song-row {
+      max-height: 52px;
+      min-height: 44px;
+      padding: 4px 8px;
+    }
+
+    &__recommended {
+      padding: 4px 16px 4px;
+      gap: 4px;
+    }
+
+    .g-rec-card__cover,
+    .g-rec-card__cover-placeholder {
+      margin-bottom: 2px;
+    }
+
+    &__active-col,
+    &__cam-col,
+    &__queue-col {
+      padding: 12px;
+    }
+  }
+}
+
+// ─── 1. LARGE TABLETS (max-width: 1024px) ────────────────────────────────────
+@media (max-width: 1024px) {
+  .g-layout {
+    &__main-row {
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr) minmax(0, 1.3fr);
+    }
+
+    &__active-col,
+    &__cam-col,
+    &__queue-col {
+      padding: 12px;
+    }
+  }
+}
+
+// ─── 2. TABLET / SMALL LAPTOP (max-width: 900px) — Stacked Mobile View ───────
+@media (max-width: 900px) {
+  .g-layout {
+    height: auto !important;
+    max-height: none !important;
+    min-height: 100dvh;
+    overflow: visible !important;
+
+    &--playing {
+      padding-bottom: #{$player-height}; // content clears fixed player
+    }
+
+    &__main-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      overflow: visible;
+      flex: none;
+      height: auto;
+      min-height: 0;
+    }
+
+    &__active-col {
+      padding: 16px;
+      border-right: none;
+      border-bottom: 1px solid $border-color;
+      align-items: stretch;
+    }
+
+    &__active-wrap {
+      height: auto;
+      min-height: 0;
+
+      .g-layout--playing & {
+        aspect-ratio: unset;
+        height: auto;
+      }
+    }
+
+    &__cam-col {
+      border-right: none;
+      border-bottom: 1px solid $border-color;
+      padding: 16px;
+    }
+
+    &__queue-col,
+    &__queue-wrap {
+      padding: 16px;
+      height: auto;
+      overflow: visible;
+    }
+
+    &__song-cols {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: none;
+      height: auto;
+      min-height: 0;
+    }
+
+    &__song-col {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      height: auto;
+      justify-content: flex-start;
+    }
+
+    &__popular-list {
+      display: flex;
+      flex-direction: column;
+      overflow: visible;
+      flex: none;
+      gap: 8px;
+      height: auto;
+    }
+
+    &__list-header {
+      margin-bottom: 12px;
+    }
+
+    // Song rows = content size on mobile (no stretch)
+    .g-song-row {
+      flex: 0 0 auto !important;
+      max-height: none !important;
+      min-height: 56px;
+      height: auto;
+      grid-template-columns: 28px 44px 1fr auto;
+      gap: 12px;
+      padding: 8px 12px;
+      align-items: center;
+
+      &__cover {
+        @include cover-box(44px, 4px);
+      }
+
+      &__cover-placeholder {
+        width: 100%;
+        height: 100%;
+        border-radius: inherit;
+      }
+
+      &__num {
+        font-size: 0.7rem;
+      }
+
+      &__name {
+        font-size: 0.82rem;
+      }
+
+      &__artist {
+        font-size: 0.7rem;
+      }
+    }
+
+    &__popular-list .g-song-row {
+      flex: 0 0 auto !important;
+      max-height: none !important;
+    }
+
+    // Recommended horizontal scroll (Mobile/Tablet swipe)
+    &__recommended {
+      padding: 12px 12px 16px !important;
+      overflow: visible;
+    }
+
+    &__rec-row {
+      overflow-x: auto;
+      overflow-y: hidden;
+      display: flex;
+      gap: 12px;
+      padding-bottom: 8px;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    .g-rec-card {
+      flex: 0 0 28vw;
+      min-width: 110px;
+      max-width: 140px;
+      scroll-snap-align: start;
+
+      &__cover,
+      &__cover-placeholder,
+      &__cover--skeleton {
+        border-radius: 8px;
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+      }
+    }
+
+    // Idle panel
+    .g-idle {
+      min-height: 280px;
+      height: auto;
+      padding: 28px 20px 88px;
+      background-size: 70% auto;
+      background-position: bottom right;
+    }
+  }
+}
+
+// ─── 3. STANDARD PHONES (max-width: 600px) ───────────────────────────────────
+@media (max-width: 600px) {
+  .g-layout {
+    &--playing {
+      padding-bottom: $player-height-mobile;
+    }
+
+    // ── Topbar ──
+    &__topbar {
+      height: $topbar-height-mobile;
+      padding: 0 12px;
+      gap: 8px;
+    }
+
+    &__mood-btn {
+      font-size: 0.62rem;
+      padding: 0.45rem 0.7rem;
+      letter-spacing: 0.08em;
+    }
+
+    // ── Top search ──
+    .g-search {
+      &__input {
+        font-size: 0.82rem;
+        padding: 0.55rem 2.1rem 0.55rem 2.2rem;
+      }
+
+      &__dropdown {
+        position: fixed;
+        top: $topbar-height-mobile;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-height: calc(100dvh - #{$topbar-height-mobile} - #{$player-height-mobile});
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        z-index: 1000;
+      }
+    }
+
+    // ── Active song → compact bar ──
+    &__active-col {
+      padding: 12px;
+    }
+
+    .g-active {
+      flex-direction: row;
+      align-items: center;
+      justify-content: flex-start;
+      height: 72px;
+      min-height: 72px;
+      padding: 8px;
+      border-radius: 8px;
+      background: #111;
+
+      &__cover-wrap {
+        position: relative;
+        inset: unset;
+        width: 56px;
+        height: 56px;
+        min-width: 56px;
+        flex-shrink: 0;
+        border-radius: 6px;
+        overflow: hidden;
+
+        &::after {
+          display: none;
+        }
+
+        img,
+        .g-active__cover {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+        }
+      }
+
+      &__info {
+        padding: 0 12px;
+        min-width: 0;
+        flex: 1;
+      }
+
+      &__eyebrow {
+        font-size: 0.55rem;
+        margin: 0 0 2px;
+      }
+
+      &__name {
+        font-size: 0.9rem;
+        margin: 0 0 2px;
+      }
+
+      &__artist {
+        font-size: 0.7rem;
+      }
+
+      &--skeleton {
+        height: 72px;
+
+        .g-active__skeleton-cover {
+          border-radius: 8px;
+        }
+      }
+    }
+
+    // ── Camera ──
+    &__cam-col {
+      padding: 12px;
+    }
+
+    &__cam-shell {
+      border-radius: 0;
+
+      &.is-idle {
+        padding: 14px;
+
+        .g-layout__cam-feed {
+          margin-bottom: 8px;
+          border-radius: 0;
+
+          .gesture-camera__vinyl {
+            width: 72px !important;
+            height: 72px !important;
+          }
+        }
+      }
+
+      &.is-live {
+        aspect-ratio: 4 / 3;
+        height: auto;
+        min-height: 220px;
+        border-radius: 0;
+
+        .gesture-camera,
+        .gesture-camera__video {
+          border-radius: 0;
+        }
+      }
+    }
+
+    &__cam-btn {
+      height: 44px;
+      font-size: 0.68rem;
+      border-radius: 0;
+    }
+
+    .gesture-display {
+      &__status {
+        margin-bottom: 10px;
+      }
+
+      &__status-title {
+        font-size: 0.9rem;
+      }
+
+      &__status-sub {
+        font-size: 0.7rem;
+      }
+
+      &__section {
+        font-size: 0.58rem;
+        margin: 4px 0;
+      }
+
+      &__list {
+        gap: 4px;
+      }
+
+      &__row {
+        grid-template-columns: 18px 1fr auto;
+        gap: 8px;
+        padding: 4px 0;
+      }
+
+      &__row-label {
+        font-size: 0.7rem;
+      }
+
+      &__row-hint {
+        font-size: 0.65rem;
+        gap: 4px;
+      }
+
+      &__row-emoji {
+        font-size: 0.85rem;
+      }
+    }
+
+    // ── Queue / Popular ──
+    &__queue-col {
+      padding: 12px 14px 16px;
+    }
+
+    &__list-label,
+    &__rec-label {
+      font-size: 0.95rem;
+      letter-spacing: 0.12em;
+    }
+
+    .g-song-row {
+      grid-template-columns: 26px 44px 1fr auto;
+      gap: 10px;
+      padding: 10px 12px;
+      min-height: 56px;
+      border-radius: 8px;
+
+      // CRITICAL cover fix
+      &__cover {
+        @include cover-box(44px, 5px);
+      }
+
+      &__name {
+        font-size: 0.84rem;
+        line-height: 1.25;
+      }
+
+      &__artist {
+        font-size: 0.7rem;
+        line-height: 1.2;
+      }
+
+      &__dur {
+        font-size: 0.68rem;
+      }
+
+      &__num {
+        font-size: 0.68rem;
+      }
+    }
+
+    // ── Recommended ──
+    &__recommended {
+      padding: 12px 12px 10px !important;
+      gap: 10px;
+    }
+
+    &__rec-row {
+      gap: 10px;
+    }
+
+    .g-rec-card {
+      flex: 0 0 120px;
+      min-width: 120px;
+      max-width: 120px !important;
+
+      &__name {
+        font-size: 12px;
+        line-height: 16px;
+      }
+
+      &__artist {
+        font-size: 11px;
+        line-height: 14px;
+      }
+    }
+
+    // ── IDLE / HERO PANEL (search visibility fix) ──
+    .g-idle {
+      min-height: 0;
+      height: auto;
+      padding: 24px 16px 20px;
+      background-image: none;
+      background-size: 65% auto;
+      background-position: right 30%;
+      background-color: #fff;
+      border-radius: 10px;
+      isolation: isolate;
+
+      &__content {
+        gap: 10px;
+        width: 100%;
+      }
+
+      &__heading {
+        font-size: 1.4rem;
+        line-height: 1.25;
+      }
+
+      &__subtitle {
+        font-size: 0.78rem;
+        line-height: 1.45;
+        max-width: 26em;
+      }
+
+      // HERO SEARCH — make fully visible
+      &__search {
+        position: relative;
+        width: 100%;
+        max-width: 100%;
+        margin-top: 8px;
+        z-index: 20;
+      }
+
+      &__search-icon {
+        left: 14px;
+        color: var(--color-accent);
+        opacity: 1;
+      }
+
+      &__search-input {
+        width: 100%;
+        font-size: 0.88rem;
+        padding: 0.75rem 2.4rem 0.75rem 2.5rem;
+        border: 1.5px solid rgba(10, 10, 10, 0.2);
+        border-radius: 10px;
+        background: #ffffff !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        color: var(--color-text);
+
+        &::placeholder {
+          color: var(--color-secondary);
+          opacity: 0.75;
+        }
+
+        &:hover {
+          border-color: rgba(10, 10, 10, 0.3);
+        }
+
+        &:focus {
+          border-color: var(--color-accent);
+          box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.15);
+          background: #fff !important;
+        }
+      }
+
+      &__dropdown {
+        position: fixed;
+        top: $topbar-height-mobile;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-height: calc(100dvh - #{$topbar-height-mobile});
+        border-radius: 0;
+        z-index: 1000;
+      }
+
+      &__tiles {
+        position: relative;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+        z-index: 1;
+      }
+    }
+
+    .g-idle-tile {
+      padding: 12px 6px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(10, 10, 10, 0.06);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+
+      &__icon {
+        width: 20px;
+        height: 20px;
+        margin-bottom: 4px;
+      }
+
+      &__label {
+        font-size: 0.72rem;
+        font-weight: 600;
+      }
+
+      &__sub {
+        font-size: 0.62rem;
+      }
+    }
+  }
+}
+
+// ─── 4. SMALL PHONES (max-width: 375px) ──────────────────────────────────────
+@media (max-width: 375px) {
+  .g-layout {
+    &__topbar {
+      padding: 0 8px;
+      gap: 6px;
+    }
+
+    &__mood-btn {
+      font-size: 0.58rem;
+      padding: 0.4rem 0.55rem;
+    }
+
+    .g-search__input {
+      font-size: 0.78rem;
+      padding: 0.5rem 1.9rem 0.5rem 2rem;
+    }
+
+    .g-active {
+      height: 64px;
+      min-height: 64px;
+
+      &__cover-wrap {
+        width: 48px;
+        height: 48px;
+        min-width: 48px;
+      }
+
+      &__name {
+        font-size: 0.82rem;
+      }
+
+      &__artist {
+        font-size: 0.66rem;
+      }
+    }
+
+    .g-song-row {
+      grid-template-columns: 22px 40px 1fr auto;
+      gap: 8px;
+      padding: 8px 10px;
+
+      &__cover {
+        @include cover-box(40px, 4px);
+      }
+
+      &__name {
+        font-size: 0.78rem;
+      }
+
+      &__artist {
+        font-size: 0.66rem;
+      }
+    }
+
+    .gesture-display {
+      &__status-sub {
+        display: none;
+      }
+
+      &__row-hint {
+        font-size: 0;
+        gap: 0;
+
+        .gesture-display__row-emoji {
+          font-size: 0.9rem;
+        }
+      }
+    }
+
+    .g-idle {
+      padding: 20px 12px 16px;
+
+      &__heading {
+        font-size: 1.25rem;
+      }
+
+      &__subtitle {
+        font-size: 0.72rem;
+      }
+
+      &__search-input {
+        font-size: 0.84rem;
+        padding: 0.7rem 2.2rem 0.7rem 2.3rem;
+      }
+
+      &__tiles {
+        gap: 6px;
+      }
+    }
+
+    .g-idle-tile {
+      padding: 10px 4px;
+
+      &__sub {
+        display: none;
+      }
+
+      &__label {
+        font-size: 0.68rem;
+      }
+    }
+
+    .g-rec-card {
+      flex: 0 0 110px;
+      max-width: 110px !important;
+    }
+  }
+}
+
+// ─── 5. SHORT HEIGHTS (landscape phones / small laptops) ─────────────────────
+@media (max-height: 500px) and (max-width: 900px) {
+  .g-layout {
+    .g-idle {
+      padding: 16px;
+
+      &__tiles {
+        display: none;
+      }
+    }
+
+    &__cam-shell.is-idle {
+      .g-layout__cam-feed {
+        display: none;
+      }
+    }
+  }
+}
+
+// ─── Reduced motion ──────────────────────────────────────────────────────────
+@media (prefers-reduced-motion: reduce) {
+  .g-layout,
+  .g-rec-card,
+  .g-song-row,
+  .g-search__spinner,
+  .g-idle__search-spinner {
+    transition: none !important;
+    animation: none !important;
+  }
+}
