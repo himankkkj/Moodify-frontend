@@ -87,7 +87,7 @@ const CallToAction = () => {
           </p>
 
           <div ref={btnRef}>
-            <Link to="/app" className="cta__btn">
+            <Link to="/mood" className="cta__btn">
               START LISTENING NOW
             </Link>
           </div>
