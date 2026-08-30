@@ -47,26 +47,43 @@ const albumItems = [
 
 // Helper hook for responsive JS props
 function useWallConfig() {
-  const [config, setConfig] = useState(() => {
-    if (typeof window === 'undefined') return { cols: 7, w: 220, h: 200 };
+  const calc = () => {
+    if (typeof window === 'undefined') {
+      return { cols: 7, w: 220, h: 200, gap: 14, tilt: 10, turn: -8, perspective: 1000, depth: 80, parallax: 0.3, lift: 50, fade: 0.65 };
+    }
+
     const width = window.innerWidth;
-    if (width < 480) return { cols: 3, w: 105, h: 105 }; // Mobile
-    if (width < 768) return { cols: 4, w: 130, h: 125 }; // Phablet
-    if (width < 1024) return { cols: 5, w: 170, h: 160 }; // Tablet
-    return { cols: 7, w: 220, h: 200 }; // Desktop
-  });
+    // horizontal padding the wall can use
+    const usable = Math.min(width, 1600) - 24;
+
+    if (width < 480) {
+      const cols = 3;
+      const gap = 10;
+      const w = Math.floor((usable - gap * cols) / cols);
+      return { cols, w, h: w, gap, tilt: 4, turn: -4, perspective: 700, depth: 30, parallax: 0, lift: 36, fade: 0.78 }; // square
+    }
+    if (width < 768) {
+      const cols = 4;
+      const gap = 12;
+      const w = Math.floor((usable - gap * cols) / cols);
+      return { cols, w, h: w, gap, tilt: 6, turn: -5, perspective: 800, depth: 40, parallax: 0, lift: 40, fade: 0.75 };
+    }
+    if (width < 1024) {
+      const cols = 5;
+      const gap = 12;
+      const w = Math.floor((usable - gap * cols) / cols);
+      return { cols, w, h: Math.round(w * 0.95), gap, tilt: 8, turn: -6, perspective: 900, depth: 60, parallax: 0.15, lift: 45, fade: 0.70 };
+    }
+    // desktop
+    return { cols: 7, w: 220, h: 200, gap: 14, tilt: 10, turn: -8, perspective: 1000, depth: 80, parallax: 0.3, lift: 50, fade: 0.65 };
+  };
+
+  const [config, setConfig] = useState(calc);
 
   useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-      if (width < 480) setConfig({ cols: 3, w: 105, h: 105 });
-      else if (width < 768) setConfig({ cols: 4, w: 130, h: 125 });
-      else if (width < 1024) setConfig({ cols: 5, w: 170, h: 160 });
-      else setConfig({ cols: 7, w: 220, h: 200 });
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    const onResize = () => setConfig(calc());
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
   }, []);
 
   return config;
@@ -103,18 +120,18 @@ export default function AlbumWall() {
         columns={wallConfig.cols}
         tileWidth={wallConfig.w}
         tileHeight={wallConfig.h}
-        gap={12}
+        gap={wallConfig.gap}
         radius={0}
-        tilt={10}
-        turn={-8}
-        perspective={1000}
-        depth={80}
-        speed={30}
+        tilt={wallConfig.tilt}
+        turn={wallConfig.turn}
+        perspective={wallConfig.perspective}
+        depth={wallConfig.depth}
+        speed={28}
         direction="up"
-        variance={0.4}
-        parallax={0.3}
-        lift={50}
-        fade={0.65}
+        variance={0.35}
+        parallax={wallConfig.parallax}
+        lift={wallConfig.lift}
+        fade={wallConfig.fade}
         dim={0.55}
         grayscale={true}
         overlayColor="#0A0A0A"

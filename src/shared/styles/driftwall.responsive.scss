@@ -33,9 +33,15 @@
   mask-composite: intersect;
 
   @media screen and (max-width: 767px) {
-    // Tighten edge mask slightly on small devices so more cards are clear
-    --dw-edge: 55%;
-    perspective: 800px; // flatter perspective on mobile avoids card clipping
+    --dw-edge: 62%; /* was ~40–55 — less black fade */
+    perspective: 700px;
+
+    -webkit-mask-image:
+      radial-gradient(ellipse 95% 90% at 50% 50%, #000 var(--dw-edge), transparent 100%),
+      linear-gradient(to top, #000 8%, #000 92%, transparent 100%);
+    mask-image:
+      radial-gradient(ellipse 95% 90% at 50% 50%, #000 var(--dw-edge), transparent 100%),
+      linear-gradient(to top, #000 8%, #000 92%, transparent 100%);
   }
 }
 
@@ -133,6 +139,7 @@
   width: 100%;
   height: 100svh;
   height: 100dvh;
+  max-height: 100dvh;
   background: #0a0a0a;
   overflow: hidden;
   position: relative;
