@@ -356,6 +356,7 @@ const TRENDING_TRACKS = [
   {id:'hmaFM40x', query:'Kajra Re'},
   {id: 'b9addbxb', query: 'Ghagra'},
   {id: 'LAIup9IY', query: 'Har Baar'},
+  {id: 'UPQv1JNW', query: 'Ishq Sufiyana'}
 ]
 
 let _trendingCache = null
