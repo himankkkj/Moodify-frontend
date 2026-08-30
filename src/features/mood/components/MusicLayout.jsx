@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { Hand } from "lucide-react"
 import { usePlayerState, usePlayerActions } from "../../player/context/player.context"
 import "../styles/musiclayout.scss"
+import "../styles/mood.responsive.scss"
 
 // ─── Module-level constants & helpers ───────────────────────────────────────
 const IMG_ERROR = (e) => {

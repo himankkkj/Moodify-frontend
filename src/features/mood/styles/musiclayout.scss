@@ -12,8 +12,9 @@
 .music-layout {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 80px); // 80px = player bar height
+  height: calc(100dvh - 80px);
   overflow: hidden;
+  padding-bottom: 0; // desktop: height already excludes player
 
   // ── TOP ──────────────────────────────────────────────
   &__top {

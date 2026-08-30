@@ -6,6 +6,7 @@ import MoodDetectMenu from "../components/MoodDetectMenu"
 import MusicLayout from "../components/MusicLayout"
 import MoodBootLoader from "../components/MoodBootLoader"
 import "../styles/mood.scss"
+import "../styles/mood.responsive.scss"
 
 const MoodPage = () => {
   const { loadMood } = usePlayerApi()
