@@ -1,9 +1,9 @@
 import { useRef, useEffect, useState, forwardRef } from 'react';
 import { gsap } from 'gsap';
 import hoverSound from '../../../assets/sounds/feature-card.wav';
-import '../styles/FlowingMenu.scss';
+import '../styles/FlowingMenu.responsive.scss';
 
-// ─── FlowingMenu parent ────────────────────────────────────────────────────────
+// ─── FlowingMenu Parent ────────────────────────────────────────────────────────
 function FlowingMenu({
   items = [],
   speed = 6,
@@ -15,13 +15,16 @@ function FlowingMenu({
 }) {
   const itemRefs = useRef([]);
   const audioRef = useRef(null);
+  const [activeIdx, setActiveIdx] = useState(null);
 
   useEffect(() => {
     audioRef.current = new Audio(hoverSound);
     audioRef.current.volume = 0.35;
     return () => {
-      audioRef.current.pause();
-      audioRef.current = null;
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
     };
   }, []);
 
@@ -31,11 +34,12 @@ function FlowingMenu({
     audioRef.current.play().catch(() => {});
   };
 
-  const handleItemHoverEnter = (hoveredIdx) => {
+  const handleItemActivate = (hoveredIdx) => {
+    setActiveIdx(hoveredIdx);
     itemRefs.current.forEach((el, idx) => {
       if (!el) return;
       gsap.to(el, {
-        flexGrow: idx === hoveredIdx ? 3 : 0.6,
+        flexGrow: idx === hoveredIdx ? 2.2 : 0.7,
         duration: 0.55,
         ease: 'expo.out',
         overwrite: 'auto',
@@ -43,7 +47,8 @@ function FlowingMenu({
     });
   };
 
-  const handleItemHoverLeave = () => {
+  const handleItemDeactivate = () => {
+    setActiveIdx(null);
     itemRefs.current.forEach((el) => {
       if (!el) return;
       gsap.to(el, {
@@ -53,6 +58,16 @@ function FlowingMenu({
         overwrite: 'auto',
       });
     });
+  };
+
+  // Mobile Tap Handler (Single Tap Toggle)
+  const handleItemTap = (clickedIdx) => {
+    if (activeIdx === clickedIdx) {
+      handleItemDeactivate();
+    } else {
+      playSound();
+      handleItemActivate(clickedIdx);
+    }
   };
 
   return (
@@ -68,8 +83,10 @@ function FlowingMenu({
             marqueeBgColor={marqueeBgColor}
             marqueeTextColor={marqueeTextColor}
             borderColor={borderColor}
-            onHoverEnter={() => handleItemHoverEnter(idx)}
-            onHoverLeave={handleItemHoverLeave}
+            isActive={activeIdx === idx}
+            onHoverEnter={() => handleItemActivate(idx)}
+            onHoverLeave={handleItemDeactivate}
+            onTap={() => handleItemTap(idx)}
             onPlaySound={playSound}
           />
         ))}
@@ -78,20 +95,21 @@ function FlowingMenu({
   );
 }
 
-// ─── MenuItem ──────────────────────────────────────────────────────────────────
+// ─── MenuItem Component ────────────────────────────────────────────────────────
 const MenuItem = forwardRef(function MenuItem(
   {
     link,
     text,
     image,
-    // hint removed — no longer used
     speed,
     textColor,
     marqueeBgColor,
     marqueeTextColor,
     borderColor,
+    isActive,
     onHoverEnter,
     onHoverLeave,
+    onTap,
     onPlaySound,
   },
   forwardedRef
@@ -110,19 +128,39 @@ const MenuItem = forwardRef(function MenuItem(
     else if (forwardedRef) forwardedRef.current = el;
   };
 
-  const distMetric = (x, y, x2, y2) => {
-    const dx = x - x2;
-    const dy = y - y2;
-    return dx * dx + dy * dy;
-  };
+  // Handle GSAP Marquee Slide In / Out cleanly
+  useEffect(() => {
+    if (!marqueeRef.current || !marqueeInnerRef.current) return;
 
-  const findClosestEdge = (mouseX, mouseY, width, height) => {
-    const topDist    = distMetric(mouseX, mouseY, width / 2, 0);
-    const bottomDist = distMetric(mouseX, mouseY, width / 2, height);
-    return topDist < bottomDist ? 'top' : 'bottom';
-  };
+    if (isActive) {
+      gsap.to(marqueeRef.current.querySelectorAll('.marquee__img'), {
+        scale: 1.18,
+        duration: 0.6,
+        ease: 'expo.out',
+        overwrite: 'auto',
+      });
 
-  // ── Repetitions: fill viewport width ──────────────────────────────────────
+      gsap
+        .timeline({ defaults: animationDefaults })
+        .set(marqueeRef.current,      { y: '-101%' }, 0)
+        .set(marqueeInnerRef.current, { y: '101%' }, 0)
+        .to([marqueeRef.current, marqueeInnerRef.current], { y: '0%' }, 0);
+    } else {
+      gsap.to(marqueeRef.current.querySelectorAll('.marquee__img'), {
+        scale: 1,
+        duration: 0.6,
+        ease: 'expo.out',
+        overwrite: 'auto',
+      });
+
+      gsap
+        .timeline({ defaults: { ...animationDefaults, overwrite: 'auto' } })
+        .to(marqueeRef.current,      { y: '101%' }, 0)
+        .to(marqueeInnerRef.current, { y: '-101%' }, 0);
+    }
+  }, [isActive]);
+
+  // Calculate repetitions to fill screen width
   useEffect(() => {
     const calculateRepetitions = () => {
       if (!marqueeInnerRef.current) return;
@@ -137,7 +175,7 @@ const MenuItem = forwardRef(function MenuItem(
     return () => window.removeEventListener('resize', calculateRepetitions);
   }, [text, image]);
 
-  // ── Marquee horizontal animation ───────────────────────────────────────────
+  // Infinite horizontal scroll animation
   useEffect(() => {
     const setupMarquee = () => {
       if (!marqueeInnerRef.current) return;
@@ -161,61 +199,17 @@ const MenuItem = forwardRef(function MenuItem(
     };
   }, [text, image, repetitions, speed]);
 
-  // ── Mouse handlers ─────────────────────────────────────────────────────────
-  const handleMouseEnter = (ev) => {
+  // Mouse Hover Handlers (Isolated to Pointer/Mouse devices only)
+  const handleMouseEnter = (e) => {
+    // Ignore touch-simulated mouseenter events
+    if (e.pointerType === 'touch' || window.matchMedia('(hover: none)').matches) return;
     onPlaySound?.();
     onHoverEnter?.();
-
-    if (marqueeRef.current) {
-      gsap.to(marqueeRef.current.querySelectorAll('.marquee__img'), {
-        scale: 1.18,
-        duration: 0.6,
-        ease: 'expo.out',
-        overwrite: 'auto',
-      });
-    }
-
-    if (!itemRef.current || !marqueeRef.current || !marqueeInnerRef.current) return;
-    const rect = itemRef.current.getBoundingClientRect();
-    const edge = findClosestEdge(
-      ev.clientX - rect.left,
-      ev.clientY - rect.top,
-      rect.width,
-      rect.height
-    );
-
-    gsap
-      .timeline({ defaults: animationDefaults })
-      .set(marqueeRef.current,      { y: edge === 'top' ? '-101%' : '101%' }, 0)
-      .set(marqueeInnerRef.current, { y: edge === 'top' ? '101%'  : '-101%' }, 0)
-      .to([marqueeRef.current, marqueeInnerRef.current], { y: '0%' }, 0);
   };
 
-  const handleMouseLeave = (ev) => {
+  const handleMouseLeave = (e) => {
+    if (e.pointerType === 'touch' || window.matchMedia('(hover: none)').matches) return;
     onHoverLeave?.();
-
-    if (marqueeRef.current) {
-      gsap.to(marqueeRef.current.querySelectorAll('.marquee__img'), {
-        scale: 1,
-        duration: 0.6,
-        ease: 'expo.out',
-        overwrite: 'auto',
-      });
-    }
-
-    if (!itemRef.current || !marqueeRef.current || !marqueeInnerRef.current) return;
-    const rect = itemRef.current.getBoundingClientRect();
-    const edge = findClosestEdge(
-      ev.clientX - rect.left,
-      ev.clientY - rect.top,
-      rect.width,
-      rect.height
-    );
-
-    gsap
-      .timeline({ defaults: { ...animationDefaults, overwrite: 'auto' } })
-      .to(marqueeRef.current,      { y: edge === 'top' ? '-101%' : '101%' }, 0)
-      .to(marqueeInnerRef.current, { y: edge === 'top' ? '101%'  : '-101%' }, 0);
   };
 
   return (
@@ -223,14 +217,25 @@ const MenuItem = forwardRef(function MenuItem(
       <a
         className="menu__item-link"
         href={link}
-        onClick={(e) => e.preventDefault()}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        onClick={(e) => {
+          e.preventDefault();
+          onTap?.();
+        }}
+        onPointerEnter={handleMouseEnter}
+        onPointerLeave={handleMouseLeave}
         style={{ color: textColor }}
       >
         {text}
       </a>
-      <div className="marquee" ref={marqueeRef} style={{ backgroundColor: marqueeBgColor }}>
+      <div
+        className="marquee"
+        ref={marqueeRef}
+        style={{ backgroundColor: marqueeBgColor }}
+        onClick={(e) => {
+          e.stopPropagation();
+          onTap?.();
+        }}
+      >
         <div className="marquee__inner-wrap">
           <div className="marquee__inner" ref={marqueeInnerRef} aria-hidden="true">
             {[...Array(repetitions)].map((_, idx) => (

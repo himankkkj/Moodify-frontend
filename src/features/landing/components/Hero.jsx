@@ -37,7 +37,7 @@ const Hero = () => {
 
   return (
     <section className="hero">
-        <SoundWave />
+      <SoundWave />
       {/* vinyl — sits at top center, behind navbar */}
       <div className="hero__vinyl" ref={vinylRef}>
         <VinylRecord size={850} spinning={true} />
@@ -71,7 +71,7 @@ const Hero = () => {
             className="hero__btn hero__btn--primary"
             onMouseEnter={() => {
               import("../../mood/services/faceapi.service").then((m) => {
-                m.loadModels?.("/models", () => {});
+                m.loadModels?.("/models", () => { });
               });
             }}
           >

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, useLayoutEffect, useMemo, useRef } from 'react';
-import '../styles/driftwall.scss';
+import '../../../shared/styles/driftwall.responsive.scss';
 import clickSrc from '../../../assets/sounds/hover.wav';
 
 let clickPool = null;

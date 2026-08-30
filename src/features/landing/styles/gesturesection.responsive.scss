@@ -1,0 +1,192 @@
+// ==========================================================================
+// GestureSection — Production Responsive SCSS
+// Breakpoints:
+// - Mobile (< 768px): Stacked header, fluid text wrapping
+// - Tablet (768px - 1023px): Side-by-side header, compact padding
+// - Desktop (>= 1024px): Original full proportions
+// ==========================================================================
+
+.gesture-section {
+  background-color: #0a0a0a;
+  width: 100%;
+  // Fill the screen; no dead page below
+  height: 100svh;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid #2a2a2a;
+
+  @media screen and (min-width: 1024px) {
+    height: 100vh;
+  }
+
+  // ── HEADER ───────────────────────────────────────────────────────────────
+  &__header {
+    flex: 0 0 auto; // header only as tall as content
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.65rem;
+    padding: calc(env(safe-area-inset-top, 0px) + 4.25rem) 1.25rem 1rem;
+    border-bottom: 1px solid #2a2a2a;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+      align-items: center;
+      gap: 0;
+      padding: 2rem 2rem 1.25rem;
+    }
+
+    @media (min-width: 1024px) {
+      padding: 64px 64px 40px;
+    }
+
+    // WATERMARK "HANDS"
+    &::before {
+      content: 'HANDS';
+      position: absolute;
+      bottom: -15px;
+      right: -10px;
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(3.5rem, 18vw, 22vw);
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #ffffff;
+      opacity: 0.04;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+      z-index: 0;
+
+      @media screen and (min-width: 1024px) {
+        bottom: -40px;
+        right: -16px;
+        font-size: 22vw;
+      }
+    }
+  }
+
+  &__header-left,
+  &__header-right {
+    position: relative;
+    z-index: 1;
+  }
+
+  // ── HEADER LEFT ──────────────────────────────────────────────────────────
+  &__header-left {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-right: 0;
+
+    @media screen and (min-width: 768px) {
+      gap: 10px;
+      padding-right: 2rem;
+    }
+
+    @media screen and (min-width: 1024px) {
+      padding-right: 48px;
+    }
+  }
+
+  // ── HEADER RIGHT ─────────────────────────────────────────────────────────
+  &__header-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding-left: 0;
+    border-left: none;
+
+    @media screen and (min-width: 768px) {
+      gap: 14px;
+      padding-left: 2rem;
+      border-left: 1px solid #2a2a2a;
+    }
+
+    @media screen and (min-width: 1024px) {
+      padding-left: 48px;
+    }
+  }
+
+  // ── EYEBROW ──────────────────────────────────────────────────────────────
+  &__eyebrow {
+    font-family: var(--font-body);
+    font-size: clamp(0.65rem, 1.8vw, 0.7rem);
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #c8102e;
+  }
+
+  // ── MAIN HEADING ─────────────────────────────────────────────────────────
+  &__heading {
+    font-family: var(--font-heading);
+    font-size: clamp(1.6rem, 7vw, 2.4rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+    margin: 0;
+    overflow: hidden;
+
+    @media (min-width: 768px) {
+      font-size: clamp(2.2rem, 4.5vw, 4rem);
+      line-height: 1;
+    }
+
+    &--light {
+      color: #f5f0e8;
+    }
+    &--accent {
+      color: #c8102e;
+    }
+  }
+
+  // ── DESCRIPTION ──────────────────────────────────────────────────────────
+  &__desc {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: #999999;
+    margin: 0;
+    max-width: 28ch;
+    white-space: normal;
+
+    @media (min-width: 768px) {
+      max-width: 480px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.6;
+    }
+  }
+
+  // ── COUNT LABEL ──────────────────────────────────────────────────────────
+  &__count {
+    font-family: var(--font-heading);
+    font-size: clamp(0.6rem, 1.5vw, 0.65rem);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #666666;
+    white-space: nowrap;
+  }
+
+  // ── FLOWING MENU CONTAINER ───────────────────────────────────────────────
+  &__menu {
+    flex: 1 1 auto;
+    min-height: 0; // CRITICAL — allows children to fill
+    position: relative;
+    isolation: isolate;
+    display: flex; // so .menu-wrap can height: 100%
+    flex-direction: column;
+  }
+}

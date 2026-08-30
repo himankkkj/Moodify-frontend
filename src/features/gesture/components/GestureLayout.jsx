@@ -381,6 +381,7 @@ const CameraSection = memo(function CameraSection({
               <GestureDisplay
                 detectedGesture={detectedGesture}
                 isActive={isActive}
+                isLoading={cameraLoading}
                 lastAction={lastAction}
                 hasTrack={hasTrack}
               />

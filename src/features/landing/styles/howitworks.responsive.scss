@@ -1,0 +1,365 @@
+// ==========================================================================
+// How It Works — Production Responsive SCSS
+// Fixes: Navbar clearance at top + Compact mobile vertical rhythm
+// ==========================================================================
+
+.how {
+  position: relative;
+  min-height: 280vh;
+  background: var(--color-bg);
+
+  @media screen and (min-width: 768px) {
+    min-height: 300vh;
+  }
+
+  // ── STICKY PANEL ──────────────────────────────────
+  &__sticky {
+    position: relative;
+    height: 100svh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    // Clears fixed navbar height on mobile & desktop + safe area insets
+    padding-top: calc(env(safe-area-inset-top, 0px) + 3.8rem);
+    padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 1rem);
+    padding-left: clamp(1rem, 4vw, 5rem);
+    padding-right: clamp(1rem, 4vw, 5rem);
+    overflow: hidden;
+
+    @media screen and (min-width: 768px) {
+      padding-top: calc(env(safe-area-inset-top, 0px) + 4.5rem);
+    }
+  }
+
+  // ── HEADING ───────────────────────────────────────
+  &__heading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    padding: 0.25rem 0 0.5rem;
+    border-bottom: 1px solid rgba(10, 10, 10, 0.1);
+
+    @media screen and (min-width: 768px) {
+      padding: 1rem 0 1.25rem;
+    }
+
+    h2,
+    .how__heading-text {
+      font-family: var(--font-heading);
+      font-size: clamp(1.4rem, 4.5vw, 3.5rem);
+      letter-spacing: 0.08em;
+      color: var(--color-text);
+      text-align: center;
+      line-height: 1;
+
+      .accent {
+        color: var(--color-accent);
+      }
+    }
+  }
+
+  // ── LAYOUT ────────────────────────────────────────
+  &__layout {
+    display: grid;
+    flex: 1;
+    min-height: 0;
+    align-items: start;
+    align-content: stretch;
+    row-gap: 0.85rem;
+    padding: 0.4rem 0 0;
+    perspective: 1000px;
+
+    // Mobile: stacked layout — right column eats leftover space
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+      "left"
+      "center"
+      "right";
+
+    @media screen and (min-width: 768px) {
+      flex: 1;
+      grid-template-columns: 72px minmax(0, 1.1fr) minmax(0, 1fr);
+      grid-template-rows: 1fr;
+      grid-template-areas: "left center right";
+      gap: 1.5rem;
+      row-gap: 1.5rem;
+      padding: 1.5rem 0;
+      align-items: center;
+      align-content: stretch;
+    }
+
+    @media screen and (min-width: 1024px) {
+      grid-template-columns: 120px 1fr 1fr;
+      gap: 3rem;
+      row-gap: 3rem;
+      padding: 2rem 0;
+    }
+  }
+
+  // ── LEFT: NUMBER & PROGRESS ───────────────────────
+  &__left {
+    grid-area: left;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.75rem;
+    height: auto;
+
+    @media screen and (min-width: 768px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.5rem;
+      height: 100%;
+      max-height: 70vh;
+    }
+  }
+
+  &__big-number {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: rgba(200, 16, 46, 0.15);
+    display: block;
+
+    @media screen and (min-width: 768px) {
+      font-size: clamp(4rem, 8vw, 7rem);
+      color: rgba(200, 16, 46, 0.08);
+    }
+
+    @media screen and (min-width: 1024px) {
+      font-size: clamp(6rem, 10vw, 10rem);
+    }
+  }
+
+  &__progress-track {
+    position: relative;
+    overflow: hidden;
+    background: rgba(10, 10, 10, 0.1);
+    width: 2px;
+    height: 1.8rem;
+
+    @media screen and (min-width: 768px) {
+      width: 1px;
+      height: clamp(100px, 20vh, 180px);
+    }
+  }
+
+  &__progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--color-accent);
+    transform-origin: top;
+    transform: scaleY(0.33);
+  }
+
+  // ── CENTER: IMAGE ─────────────────────────────────
+  &__center {
+    grid-area: center;
+    position: relative;
+    width: 100%;
+    min-height: 0;
+    margin-top: 0.5rem; // extra nudge down from number
+    height: clamp(180px, 34vw, 230px);
+    overflow: hidden;
+    border-radius: 8px;
+    transform-style: preserve-3d;
+
+    @media screen and (min-width: 768px) {
+      height: min(58vh, 520px);
+      border-radius: 12px;
+      margin: 0;
+    }
+
+    @media screen and (min-width: 1024px) {
+      height: 70vh;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+
+  &__image-wrap {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__center picture {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: inset(0 0 0 0);
+    opacity: 0;
+
+    &--base {
+      filter: grayscale(0.8) sepia(0.2);
+    }
+
+    &--color {
+      filter: saturate(1.5) brightness(1.08);
+      clip-path: circle(0px at 50% 50%);
+      pointer-events: none;
+    }
+  }
+
+  // ── RIGHT: TITLE & DESCRIPTION ────────────────────
+  &__right {
+    grid-area: right;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; // pin title+desc to bottom
+    height: 100%;
+    min-height: 0;
+    padding-bottom: 0.5rem; // safe gap above bottom
+    margin-top: 0;
+    gap: 0.4rem;
+
+    @media screen and (min-width: 768px) {
+      justify-content: center;
+      height: min(58vh, 520px);
+      padding-bottom: 0;
+      gap: 2rem;
+      margin-top: 0;
+    }
+
+    @media screen and (min-width: 1024px) {
+      height: 70vh;
+      gap: 3rem;
+    }
+  }
+
+  &__circular {
+    display: none;
+
+    @media screen and (min-width: 1280px) {
+      display: block;
+      position: absolute;
+      bottom: 20rem;
+      right: 10rem;
+      z-index: 10;
+      opacity: 0.8;
+    }
+  }
+
+  // ── TITLES ────────────────────────────────────────
+  &__titles {
+    position: relative;
+    z-index: 1;
+    flex: none;
+    display: flex;
+    align-items: flex-start;
+    min-height: 2.6rem; // only as tall as the title
+    width: 100%;
+
+    @media screen and (min-width: 768px) {
+      min-height: 110px;
+    }
+
+    @media screen and (min-width: 1024px) {
+      min-height: 150px;
+    }
+  }
+
+  &__title {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    font-family: var(--font-heading);
+    font-size: clamp(1.35rem, 5.5vw, 2.2rem);
+    line-height: 1.05;
+    letter-spacing: 0.03em;
+    color: var(--color-text);
+    opacity: 0;
+
+    @media screen and (min-width: 768px) {
+      font-size: clamp(1.75rem, 3.2vw, 3rem);
+    }
+
+    @media screen and (min-width: 1024px) {
+      font-size: clamp(2rem, 4vw, 4rem);
+    }
+  }
+
+  // ── DESCRIPTIONS ──────────────────────────────────
+  &__descs {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: auto;
+    min-height: 3rem;
+    border-top: 1px solid rgba(10, 10, 10, 0.1);
+    padding-top: 0.5rem;
+
+    @media screen and (min-width: 768px) {
+      height: 110px;
+      min-height: 110px;
+      padding-top: 1.25rem;
+    }
+  }
+
+  &__desc {
+    position: absolute;
+    z-index: 1;
+    top: 0.4rem;
+    left: 0;
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: clamp(0.78rem, 2.2vw, 0.95rem);
+    font-weight: 400;
+    line-height: 1.4;
+    color: #666666;
+    max-width: 42ch;
+    opacity: 0;
+
+    @media screen and (min-width: 768px) {
+      top: 1.25rem;
+      font-size: 0.95rem;
+      line-height: 1.65;
+    }
+
+    @media screen and (min-width: 1024px) {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      max-width: 38ch;
+    }
+  }
+
+  // ── TRIGGERS ──────────────────────────────────────
+  &__triggers {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 1px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__step-trigger {
+    flex: 1;
+    min-height: 100vh;
+  }
+}

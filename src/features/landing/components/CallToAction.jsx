@@ -4,7 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { Link } from 'react-router-dom'
 import coverImg from '../../../assets/images/cta/cover.webp'
 import vinylImg  from '../../../assets/images/cta/vinyl.webp'
-import '../styles/calltoaction.scss'
+import '../styles/calltoaction.responsive.scss'
 import albumSong from '../../../assets/sounds/album-song.mp3'
 
 gsap.registerPlugin(ScrollTrigger)

@@ -1,4 +1,4 @@
-import '../styles/moodslider.scss'
+import '../styles/moodslider.responsive.scss'
 import clickSrc from '../../../assets/sounds/hover.wav'
 
 // Pool of 3 instances — rapid hover rotates through them

@@ -9,7 +9,7 @@ import playPauseImg  from '../../../assets/images/gestures/play-pause.webp';
 import previousImg   from '../../../assets/images/gestures/previous.webp';
 import volumeUpImg   from '../../../assets/images/gestures/volume-up.webp';
 
-import '../styles/gesturesection.scss';
+import '../styles/gesturesection.responsive.scss';
 
 gsap.registerPlugin(ScrollTrigger);
 

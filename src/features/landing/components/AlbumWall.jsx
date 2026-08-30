@@ -1,5 +1,4 @@
-
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import DriftWall from './DriftWall';
@@ -30,6 +29,8 @@ import cover23 from '../../../assets/images/albums/album23.webp';
 import cover24 from '../../../assets/images/albums/album24.webp';
 import cover25 from '../../../assets/images/albums/album25.webp';
 
+import '../../../shared/styles/driftwall.responsive.scss';
+
 gsap.registerPlugin(ScrollTrigger);
 
 const albumItems = [
@@ -44,8 +45,36 @@ const albumItems = [
   { image: cover25 },
 ];
 
+// Helper hook for responsive JS props
+function useWallConfig() {
+  const [config, setConfig] = useState(() => {
+    if (typeof window === 'undefined') return { cols: 7, w: 220, h: 200 };
+    const width = window.innerWidth;
+    if (width < 480) return { cols: 3, w: 105, h: 105 }; // Mobile
+    if (width < 768) return { cols: 4, w: 130, h: 125 }; // Phablet
+    if (width < 1024) return { cols: 5, w: 170, h: 160 }; // Tablet
+    return { cols: 7, w: 220, h: 200 }; // Desktop
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 480) setConfig({ cols: 3, w: 105, h: 105 });
+      else if (width < 768) setConfig({ cols: 4, w: 130, h: 125 });
+      else if (width < 1024) setConfig({ cols: 5, w: 170, h: 160 });
+      else setConfig({ cols: 7, w: 220, h: 200 });
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return config;
+}
+
 export default function AlbumWall() {
   const sectionRef = useRef(null);
+  const wallConfig = useWallConfig();
 
   useEffect(() => {
     gsap.fromTo(
@@ -67,24 +96,24 @@ export default function AlbumWall() {
   return (
     <section
       ref={sectionRef}
-      style={{ height: '100vh', background: '#0A0A0A' }}
+      className="album-wall-section"
     >
       <DriftWall
         items={albumItems}
-        columns={7}
-        tileWidth={220}
-        tileHeight={200}
-        gap={14}
+        columns={wallConfig.cols}
+        tileWidth={wallConfig.w}
+        tileHeight={wallConfig.h}
+        gap={12}
         radius={0}
-        tilt={12}
-        turn={-10}
-        perspective={1200}
-        depth={100}
-        speed={35}
+        tilt={10}
+        turn={-8}
+        perspective={1000}
+        depth={80}
+        speed={30}
         direction="up"
-        variance={0.45}
-        parallax={0.5}
-        lift={60}
+        variance={0.4}
+        parallax={0.3}
+        lift={50}
         fade={0.65}
         dim={0.55}
         grayscale={true}

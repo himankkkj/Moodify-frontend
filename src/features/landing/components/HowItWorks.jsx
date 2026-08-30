@@ -1,75 +1,75 @@
-  import { Fragment, useEffect, useRef } from 'react'
-  import { gsap } from 'gsap'
-  import { ScrollTrigger } from 'gsap/ScrollTrigger'
-  import '../styles/howitworks.scss'
+import { Fragment, useEffect, useRef } from 'react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import '../styles/howitworks.responsive.scss'
 
-  import step1_800  from '../../../assets/images/howitworks/step1-800.webp'
-  import step1_1100 from '../../../assets/images/howitworks/step1-1100.webp'
-  import step1_1400 from '../../../assets/images/howitworks/step1-1400.webp'
-  import step2_800  from '../../../assets/images/howitworks/step2-800.webp'
-  import step2_1100 from '../../../assets/images/howitworks/step2-1100.webp'
-  import step2_1400 from '../../../assets/images/howitworks/step2-1400.webp'
-  import step3_800  from '../../../assets/images/howitworks/step3-800.webp'
-  import step3_1100 from '../../../assets/images/howitworks/step3-1100.webp'
-  import step3_1400 from '../../../assets/images/howitworks/step3-1400.webp'
-  import flipSoundSrc from '../../../assets/sounds/page-flip.wav'
+import step1_800 from '../../../assets/images/howitworks/step1-800.webp'
+import step1_1100 from '../../../assets/images/howitworks/step1-1100.webp'
+import step1_1400 from '../../../assets/images/howitworks/step1-1400.webp'
+import step2_800 from '../../../assets/images/howitworks/step2-800.webp'
+import step2_1100 from '../../../assets/images/howitworks/step2-1100.webp'
+import step2_1400 from '../../../assets/images/howitworks/step2-1400.webp'
+import step3_800 from '../../../assets/images/howitworks/step3-800.webp'
+import step3_1100 from '../../../assets/images/howitworks/step3-1100.webp'
+import step3_1400 from '../../../assets/images/howitworks/step3-1400.webp'
+import flipSoundSrc from '../../../assets/sounds/page-flip.wav'
 
-  gsap.registerPlugin(ScrollTrigger)
+gsap.registerPlugin(ScrollTrigger)
 
-  const steps = [
-    {
-      number: '01',
-      title: 'LOOK AT\nCAMERA',
-      desc: 'Allow camera access once. No photos saved, no data stored. Everything happens live in your browser.',
-      image: step1_1400,
-      image1100: step1_1100,
-      image800: step1_800,
-    },
-    {
-      number: '02',
-      title: 'WE READ\nYOUR MOOD',
-      desc: 'face-api.js detects your expression instantly — happy, sad, angry, surprised and more.',
-      image: step2_1400,
-      image1100: step2_1100,
-      image800: step2_800,
-    },
-    {
-      number: '03',
-      title: 'MUSIC\nPLAYS',
-      desc: 'Last.fm finds the perfect tracks for your mood. Music starts playing automatically.',
-      image: step3_1400,
-      image1100: step3_1100,
-      image800: step3_800,
+const steps = [
+  {
+    number: '01',
+    title: 'LOOK AT\nCAMERA',
+    desc: 'Allow camera access once. No photos saved, no data stored. Everything happens live in your browser.',
+    image: step1_1400,
+    image1100: step1_1100,
+    image800: step1_800,
+  },
+  {
+    number: '02',
+    title: 'WE READ\nYOUR MOOD',
+    desc: 'face-api.js detects your expression instantly — happy, sad, angry, surprised and more.',
+    image: step2_1400,
+    image1100: step2_1100,
+    image800: step2_800,
+  },
+  {
+    number: '03',
+    title: 'MUSIC\nPLAYS',
+    desc: 'Last.fm finds the perfect tracks for your mood. Music starts playing automatically.',
+    image: step3_1400,
+    image1100: step3_1100,
+    image800: step3_800,
+  }
+]
+
+const HowItWorks = () => {
+  const sectionRef = useRef(null)
+  const stickyRef = useRef(null)
+  const imagesRef = useRef([])
+  const centerRef = useRef(null)
+  const colorImagesRef = useRef([])
+  const titlesRef = useRef([])
+  const descsRef = useRef([])
+  const progressRef = useRef(null)
+  const activeNumRef = useRef(null)
+  const prevStepRef = useRef(-1)
+  const audioRef = useRef(null)
+  const audioUnlockedRef = useRef(false)
+
+  // unlock audio on first user interaction
+  useEffect(() => {
+    const unlock = () => { audioUnlockedRef.current = true }
+    window.addEventListener('click', unlock, { once: true })
+    window.addEventListener('scroll', unlock, { once: true })
+    return () => {
+      window.removeEventListener('click', unlock)
+      window.removeEventListener('scroll', unlock)
     }
-  ]
+  }, [])
 
-  const HowItWorks = () => {
-    const sectionRef       = useRef(null)
-    const stickyRef        = useRef(null)
-    const imagesRef        = useRef([])
-    const centerRef        = useRef(null)
-    const colorImagesRef   = useRef([])
-    const titlesRef        = useRef([])
-    const descsRef         = useRef([])
-    const progressRef      = useRef(null)
-    const activeNumRef     = useRef(null)
-    const prevStepRef      = useRef(-1)
-    const audioRef         = useRef(null)
-    const audioUnlockedRef = useRef(false)
-
-    // unlock audio on first user interaction
-    useEffect(() => {
-      const unlock = () => { audioUnlockedRef.current = true }
-      window.addEventListener('click', unlock, { once: true })
-      window.addEventListener('scroll', unlock, { once: true })
-      return () => {
-        window.removeEventListener('click', unlock)
-        window.removeEventListener('scroll', unlock)
-      }
-    }, [])
-
-    useEffect(() => {
-      const ctx = gsap.context(() => {
+  useEffect(() => {
+    const ctx = gsap.context(() => {
 
       // ── PIN THE STICKY PANEL ────────────────
       ScrollTrigger.create({
@@ -139,7 +139,7 @@
         audioRef.current.volume = 0.4
       }
       audioRef.current.currentTime = 0
-      audioRef.current.play().catch(() => {})
+      audioRef.current.play().catch(() => { })
     }
     prevStepRef.current = i
 
@@ -207,7 +207,7 @@
     titlesRef.current.forEach((title, idx) => {
       gsap.to(title, {
         opacity: idx === i ? 1 : 0,
-        y:       idx === i ? 0 : 20,
+        y: idx === i ? 0 : 20,
         duration: 0.5,
         ease: 'power2.out',
         overwrite: 'auto'
@@ -218,9 +218,9 @@
     descsRef.current.forEach((desc, idx) => {
       gsap.to(desc, {
         opacity: idx === i ? 1 : 0,
-        y:       idx === i ? 0 : 10,
+        y: idx === i ? 0 : 10,
         duration: 0.4,
-        delay:    idx === i ? 0.1 : 0,
+        delay: idx === i ? 0.1 : 0,
         ease: 'power2.out',
         overwrite: 'auto'
       })
