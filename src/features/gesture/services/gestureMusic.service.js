@@ -311,7 +311,11 @@ const CURATED_TRACKS = [
   { id: '5-dq391s', query: 'Jiya Lage Na Sona Mohapatra' },
   { id: 'AddWo0lb', query: 'LAAVAN Jasmine Sandlas' },
   {id: 'AiaEw6j1', query: 'Inaam'},
-  {id: 'W3ZAWX5t', query: 'Nadaan Parindey'}
+  {id: 'W3ZAWX5t', query: 'Nadaan Parindey'},
+  {id:'UV6FjJYx', query:'Nazm Nazm'},
+  {id: 'gMCUOdzs', query: 'Humsafar'},
+  {id:'ueQZvApR', query: 'Chuttamalle'},
+  {id: 'LAIup9IY', query: 'Har Baar'},
 ]
 
 let _curatedCache = null
@@ -349,6 +353,9 @@ const TRENDING_TRACKS = [
   { id: 'tM7QIScN', query: 'Samjho Na'},
   {id: 'RMnHyp2C', query: 'Tum Ho Toh'},
   {id: 'SWu3cDHH', query: 'Tose Naina'},
+  {id:'hmaFM40x', query:'Kajra Re'},
+  {id: 'b9addbxb', query: 'Ghagra'},
+  {id: 'LAIup9IY', query: 'Har Baar'},
 ]
 
 let _trendingCache = null
