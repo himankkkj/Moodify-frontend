@@ -6,6 +6,17 @@ import { useAuth } from '../hooks/useAuth.js'
 import { useAuthPageAnimation, animateOut } from '../hooks/useAuthPageAnimation.js'
 import AuthLayout from '../components/AuthLayout.jsx'
 
+function getPasswordError(password) {
+  if (!password) return "Password is required"
+  if (password.length < 8) return "Password must be at least 8 characters"
+  if (password.length > 128) return "Password must not exceed 128 characters"
+  if (!/[a-z]/.test(password)) return "Password must include a lowercase letter"
+  if (!/[A-Z]/.test(password)) return "Password must include an uppercase letter"
+  if (!/\d/.test(password)) return "Password must include a number"
+  if (!/[@$!%*?&#^()_+\-=.,;:]/.test(password)) return "Password must include a special character"
+  return null
+}
+
 function validate(form, agreeTerms) {
   const next = {}
 
@@ -21,10 +32,9 @@ function validate(form, agreeTerms) {
     next.email = 'Enter a valid email'
   }
 
-  if (!form.password) {
-    next.password = 'Password is required'
-  } else if (form.password.length < 8) {
-    next.password = 'Password must be at least 8 characters'
+  const passError = getPasswordError(form.password)
+  if (passError) {
+    next.password = passError
   }
 
   if (!agreeTerms) {

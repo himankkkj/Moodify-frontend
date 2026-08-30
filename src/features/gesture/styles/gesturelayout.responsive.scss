@@ -3,7 +3,7 @@
 // Production responsive overrides for Large Desktop, Laptops, Tablets & Mobile
 // ─────────────────────────────────────────────────────────────────────────────
 
-$player-height-mobile: 72px;
+$player-height-mobile: calc(64px + env(safe-area-inset-bottom, 0px));
 $player-height: 80px;
 $topbar-height-mobile: 56px;
 $touch-target-min: 44px;

@@ -138,7 +138,7 @@ $touch: 44px;
     max-height: none !important;
     min-height: 0;
     overflow: visible !important;
-    padding-bottom: 80px; // 👈 MUST match player height — clears UP NEXT
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); // 👈 Clears 64px mobile player
 
     &__top {
       grid-template-columns: 1fr;
@@ -207,6 +207,12 @@ $touch: 44px;
         object-fit: cover;
         display: block;
       }
+    }
+
+    &__song-row--skeleton &__song-cover {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
     }
 
     &__queue {
@@ -513,7 +519,7 @@ $touch: 44px;
 
 @media (max-width: 900px) and (max-height: 850px) {
   .music-layout {
-    padding-bottom: 80px; // still required
+    padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); // still required
   }
 
   .music-layout__queue {
