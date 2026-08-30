@@ -50,6 +50,16 @@ const MoodDetectMenu = ({
       .map(([label, val]) => [label, Math.min(Math.round(val * 100), 100)])
   }, [isDetecting, isDone, liveExpressions])
 
+  // ⚡️ Body scroll lock when detect menu is open
+  useEffect(() => {
+    if (!isOpen) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    return () => {
+      document.body.style.overflow = prev || ""
+    }
+  }, [isOpen])
+
   // ⚡️ GSAP Context with Memory Leak Revert Cleanup
   useEffect(() => {
     const container = containerRef.current
@@ -83,7 +93,11 @@ const MoodDetectMenu = ({
         gsap.to(container, {
           opacity: 0, duration: 0.25, delay: 0.1, ease: "power2.in",
           onComplete: () => {
-            gsap.set(container, { visibility: "hidden", pointerEvents: "none" })
+            gsap.set(container, {
+              visibility: "hidden",
+              pointerEvents: "none",
+              display: "none",
+            })
           }
         })
       }
@@ -93,7 +107,11 @@ const MoodDetectMenu = ({
   }, [isOpen])
 
   return (
-    <div ref={containerRef} className="detect-menu">
+    <div
+      ref={containerRef}
+      className={`detect-menu ${!isOpen ? "is-closed" : ""}`}
+      style={{ display: isOpen ? "grid" : "none" }}
+    >
       {/* ── LEFT PANEL ─────────────────────────────── */}
       <div className="detect-menu__left">
         {canClose && (
