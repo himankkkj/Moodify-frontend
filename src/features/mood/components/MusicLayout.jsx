@@ -54,7 +54,7 @@ const SONG_LIST_SKELETON = (
       {Array.from({ length: 4 }, (_, i) => (
         <div key={`L-${i}`} className="music-layout__song-row music-layout__song-row--skeleton">
           <span className="music-layout__song-num" />
-          <div className="music-layout__song-cover music-layout__skeleton-cover" />
+          <div className="music-layout__skeleton-thumb" />
           <div className="music-layout__song-meta">
             <div className="music-layout__skeleton-line music-layout__skeleton-line--name" />
             <div className="music-layout__skeleton-line music-layout__skeleton-line--artist" />
@@ -67,7 +67,7 @@ const SONG_LIST_SKELETON = (
       {Array.from({ length: 4 }, (_, i) => (
         <div key={`R-${i}`} className="music-layout__song-row music-layout__song-row--skeleton">
           <span className="music-layout__song-num" />
-          <div className="music-layout__song-cover music-layout__skeleton-cover" />
+          <div className="music-layout__skeleton-thumb" />
           <div className="music-layout__song-meta">
             <div className="music-layout__skeleton-line music-layout__skeleton-line--name" />
             <div className="music-layout__skeleton-line music-layout__skeleton-line--artist" />
@@ -85,7 +85,7 @@ const QUEUE_SKELETON = (
     <div className="music-layout__queue-row">
       {Array.from({ length: 6 }, (_, i) => (
         <div key={i} className="music-layout__queue-item music-layout__queue-item--skeleton">
-          <div className="music-layout__queue-placeholder music-layout__skeleton-cover" />
+          <div className="music-layout__skeleton-square" />
           <div className="music-layout__skeleton-line music-layout__skeleton-line--name" />
           <div className="music-layout__skeleton-line music-layout__skeleton-line--artist" />
         </div>

@@ -256,8 +256,8 @@ $touch: 44px;
     order: -1;
     border-left: none;
     border-bottom: 1px solid rgba(10, 10, 10, 0.08);
-    padding: 12px;
-    gap: 12px;
+    padding: 0;   // was 12px — padding caused side gaps on camera
+    gap: 0;
   }
 
   .detect-menu__left {
@@ -267,8 +267,12 @@ $touch: 44px;
 
   .detect-menu__camera {
     flex: none;
-    min-height: 220px;
-    height: min(50dvh, 400px);
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    height: auto;
+    max-height: min(42dvh, 320px);
+    min-height: 200px;
+    overflow: hidden;
   }
 
   .detect-menu__close {

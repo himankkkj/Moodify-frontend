@@ -6,6 +6,7 @@ import PlayerGate from "./features/player/components/PlayerGate.jsx";
 const Register = lazy(() => import("./features/auth/pages/Register.jsx"));
 const Login = lazy(() => import("./features/auth/pages/Login.jsx"));
 const Verification = lazy(() => import("./features/auth/pages/Verification.jsx"));
+const Terms = lazy(() => import("./features/legal/pages/Terms.jsx"));
 const Landing = lazy(() => import("./features/landing/pages/Landing.jsx"));
 const MoodPage     = lazy(() => import("./features/mood/pages/MoodPage.jsx"));
 const GesturePage  = lazy(() => import("./features/gesture/pages/GesturePage.jsx"));
@@ -44,6 +45,14 @@ export const routes = createBrowserRouter([
         element: (
           <Suspense fallback={null}>
             <Register />
+          </Suspense>
+        ),
+      },
+      {
+        path: "/terms",
+        element: (
+          <Suspense fallback={null}>
+            <Terms />
           </Suspense>
         ),
       },
