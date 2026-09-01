@@ -15,23 +15,23 @@ const Hero = () => {
 
     tl
       .fromTo(vinylRef.current,
-        { y: -120, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.2 }
+        { y: -80, scale: 0.9, rotate: -15 },
+        { y: 0, scale: 1, rotate: 0, duration: 1.2, ease: 'back.out(1.2)' }
       )
       .fromTo(headingRef.current.children,
-        { y: 80, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, stagger: 0.15 },
-        '-=0.6'
+        { y: 40, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.7, stagger: 0.08 },
+        '-=0.8'
       )
       .fromTo(subRef.current,
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.8 },
-        '-=0.4'
+        { y: 16, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5 },
+        '-=0.35'
       )
       .fromTo(btnRef.current.children,
-        { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6, stagger: 0.1 },
-        '-=0.4'
+        { y: 12, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.4, stagger: 0.06 },
+        '-=0.25'
       )
   }, [])
 

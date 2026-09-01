@@ -27,7 +27,7 @@ export const routes = createBrowserRouter([
       {
         path: "/",
         element: (
-          <Suspense fallback={null}>
+          <Suspense fallback={<div style={{ minHeight: '100vh', background: '#F5F0E8' }} />}>
             <Landing />
           </Suspense>
         ),
@@ -35,7 +35,7 @@ export const routes = createBrowserRouter([
       {
         path: "/login",
         element: (
-          <Suspense fallback={null}>
+          <Suspense fallback={<div style={{ minHeight: '100vh', background: '#F5F0E8' }} />}>
             <Login />
           </Suspense>
         ),
@@ -43,7 +43,7 @@ export const routes = createBrowserRouter([
       {
         path: "/register",
         element: (
-          <Suspense fallback={null}>
+          <Suspense fallback={<div style={{ minHeight: '100vh', background: '#F5F0E8' }} />}>
             <Register />
           </Suspense>
         ),
@@ -51,7 +51,7 @@ export const routes = createBrowserRouter([
       {
         path: "/terms",
         element: (
-          <Suspense fallback={null}>
+          <Suspense fallback={<div style={{ minHeight: '100vh', background: '#F5F0E8' }} />}>
             <Terms />
           </Suspense>
         ),
@@ -59,7 +59,7 @@ export const routes = createBrowserRouter([
       {
         path: "/verification",
         element: (
-          <Suspense fallback={null}>
+          <Suspense fallback={<div style={{ minHeight: '100vh', background: '#F5F0E8' }} />}>
             <Verification />
           </Suspense>
         ),
@@ -67,7 +67,7 @@ export const routes = createBrowserRouter([
       {
         path: "/mood",
         element: (
-          <Suspense fallback={null}>
+          <Suspense fallback={<div style={{ minHeight: '100vh', background: '#F5F0E8' }} />}>
             <MoodPage />
           </Suspense>
         ),
@@ -75,7 +75,7 @@ export const routes = createBrowserRouter([
       {
         path: "/gesture",
         element: (
-          <Suspense fallback={null}>
+          <Suspense fallback={<div style={{ minHeight: '100vh', background: '#F5F0E8' }} />}>
             <ProtectedRoute>
               <GesturePage />
             </ProtectedRoute>

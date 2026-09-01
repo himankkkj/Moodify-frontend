@@ -16,16 +16,22 @@ export default defineConfig({
     })
   ],
   build: {
+    target: 'es2020',
+    cssCodeSplit: true,
+    sourcemap: false,
+    chunkSizeWarningLimit: 900,
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          if (id.includes('node_modules')) {
-            if (id.includes('react-dom')) return 'react-vendor'
-            if (id.includes('react-router')) return 'router'
-            if (id.includes('gsap')) return 'gsap'
-            if (id.includes('axios')) return 'axios'
-            if (id.includes('react')) return 'react-vendor'
-          }
+          if (!id.includes('node_modules')) return
+          if (id.includes('@vladmandic/face-api') || id.includes('@tensorflow')) return 'faceapi'
+          if (id.includes('@mediapipe')) return 'mediapipe'
+          if (id.includes('three') || id.includes('@react-three') || id.includes('postprocessing')) return 'three'
+          if (id.includes('gsap') || id.includes('lenis')) return 'motion'
+          if (id.includes('react-router')) return 'router'
+          if (id.includes('react-dom') || id.includes('/react/')) return 'react-vendor'
+          if (id.includes('axios')) return 'axios'
+          if (id.includes('lucide-react')) return 'icons'
         }
       }
     }

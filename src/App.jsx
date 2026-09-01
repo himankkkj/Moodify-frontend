@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, lazy, Suspense, useState } from 'react'
 import { routes } from './routes.jsx'
 import { RouterProvider } from 'react-router-dom'
 import { AuthProvider } from './features/auth/auth.context.jsx'
 import { PlayerProvider } from './features/player/context/player.context'
-import DitherCursor from './features/shared/components/DitherCursor'
 import hoverSrc from './assets/sounds/click.wav'
+
+const DitherCursor = lazy(() => import('./features/shared/components/DitherCursor'))
 
 // ── Audio pool — handles rapid sequential hovers cleanly ──────────────────
 let hoverPool = null
@@ -32,8 +33,18 @@ const playHover = () => {
 const INTERACTIVE = 'button, a, [role="button"], input, select, textarea, label'
 
 const App = () => {
+  const [showCursor, setShowCursor] = useState(false)
 
   useEffect(() => {
+    const desktop = window.matchMedia('(pointer:fine) and (min-width: 1024px)').matches
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    setShowCursor(desktop && !reduceMotion)
+  }, [])
+
+  useEffect(() => {
+    const isFinePointer = window.matchMedia('(pointer:fine)').matches
+    if (!isFinePointer) return
+
     const handleOver = (e) => {
       if (e.target.closest('[data-no-hover-sound]')) return
       if (e.target.closest(INTERACTIVE)) playHover()
@@ -46,7 +57,11 @@ const App = () => {
   return (
     <AuthProvider>
       <PlayerProvider>
-        <DitherCursor />
+        {showCursor && (
+          <Suspense fallback={null}>
+            <DitherCursor />
+          </Suspense>
+        )}
         <RouterProvider router={routes} />
       </PlayerProvider>
     </AuthProvider>
