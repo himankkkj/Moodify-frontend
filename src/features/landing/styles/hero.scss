@@ -1,22 +1,41 @@
 .hero {
   position: relative;
-  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: hidden;
   background: var(--color-bg);
   padding-bottom: var(--space-xl);
+  padding-top: env(safe-area-inset-top);
 
   // ── VINYL ─────────────────────────────
   &__vinyl {
     position: relative;
     z-index: 2;
-    margin-top: -380px;
+    width: 100%;
     display: flex;
     justify-content: center;
-    filter: drop-shadow(0 40px 80px rgba(0, 0, 0, 0.25));
+    align-items: center;
     flex-shrink: 0;
+    filter: drop-shadow(0 40px 80px rgba(0, 0, 0, 0.25));
+
+    // Desktop overlap
+    margin-top: clamp(-420px, -24vw, -300px);
+
+    // Tablet
+    @media (max-width: 1024px) {
+      margin-top: clamp(-260px, -18vw, -150px);
+      filter: drop-shadow(0 28px 56px rgba(0, 0, 0, 0.2));
+    }
+
+    // Mobile: vinyl down + fully visible
+    @media (max-width: 768px) {
+      margin-top: 0;
+      padding-top: 0.15rem;
+      filter: drop-shadow(0 16px 34px rgba(0, 0, 0, 0.16));
+    }
   }
 
   // ── CONTENT ───────────────────────────
@@ -24,49 +43,30 @@
     position: relative;
     z-index: 3;
     width: 100%;
+    max-width: 1400px;
+    margin-inline: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 0 2rem;
-    margin-top: -180px;
+    padding: 0 clamp(1rem, 4vw, 2rem);
     flex: 1;
+
+    // Desktop pull-up under vinyl
+    margin-top: clamp(-190px, -12vw, -120px);
+
+    @media (max-width: 1024px) {
+      margin-top: clamp(-110px, -8vw, -56px);
+    }
+
+    // Mobile clean stack
+    @media (max-width: 768px) {
+      margin-top: 0.35rem;
+      padding: 0 1.25rem 1.5rem;
+    }
   }
 
   // ── HEADING ───────────────────────────
-  //   &__heading {
-  //     font-family: var(--font-heading);
-  //     font-size: var(--fs-hero);
-  //     line-height: 0.9;
-  //     letter-spacing: -0.01em;
-  //     color: var(--color-text);
-
-  //     display: grid;
-  //     grid-template-columns: 1fr 1fr;
-  //     grid-template-rows: auto auto;
-  //     width: 100%;
-  //     max-width: 1400px;
-  //     padding: 0 3rem;
-
-  //     &-left {
-  //       text-align: left;
-  //       color: var(--color-accent); // MUSIC in red
-  //     }
-
-  //     &-right {
-  //       text-align: right;
-  //       color: var(--color-text); // MEETS in black
-  //     }
-
-  //     &-full {
-  //       grid-column: 1 / -1;
-  //       text-align: center;
-  //       font-size: calc(var(--fs-hero) * 0.7);
-  //       color: var(--color-text);
-  //       margin-top: 0.1em;
-  //     }
-  //   }
-
   &__heading {
     font-family: var(--font-heading);
     font-size: var(--fs-hero);
@@ -77,73 +77,157 @@
 
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between; // ← MUSIC left, MEETS right
-    align-items: center;
+    justify-content: space-between;
+    align-items: baseline;
     width: 100%;
     max-width: 100%;
-    padding: 0 3rem;
+    padding: 0 clamp(1rem, 3vw, 3rem);
+    column-gap: 0.75rem;
+    row-gap: 0;
 
     &-left {
       color: var(--color-accent);
       text-align: left;
+      flex: 1 1 auto;
     }
 
     &-right {
       color: var(--color-text);
       text-align: right;
+      flex: 1 1 auto;
     }
 
     &-full {
       display: block;
       width: 100%;
+      flex: 0 0 100%;
       text-align: center;
-      font-size: calc(var(--fs-hero) * 0.75);
+      font-size: 0.75em;
       color: var(--color-text);
-      margin-top: 0.1em;
+      margin-top: 0.02em;
     }
 
+    // Tablet
+    @media (max-width: 1024px) {
+      padding: 0 0.5rem;
+      line-height: 0.92;
+    }
+
+    // Mobile: stacked poster alignment
+    @media (max-width: 768px) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      font-size: clamp(3.5rem, 17.5vw, 5.4rem);
+      line-height: 0.86;
+      min-height: unset;
+
+      &-left,
+      &-right,
+      &-full {
+        width: 100%;
+        flex: none;
+        text-align: center;
+        display: block;
+      }
+
+      &-left {
+        color: var(--color-accent);
+      }
+
+      &-right {
+        margin-top: -0.01em;
+      }
+
+      &-full {
+        margin-top: 0.01em;
+        font-size: 0.78em;
+      }
+    }
+
+    @media (max-width: 380px) {
+      font-size: clamp(3.05rem, 15.8vw, 4.2rem);
+    }
   }
 
   // ── TAGLINE ───────────────────────────
   &__tagline {
-    margin-top: 2rem;
+    margin-top: clamp(1.1rem, 2.6vw, 2rem);
     font-family: var(--font-heading);
-    font-size: clamp(1.2rem, 2vw, 1.6rem);
+    font-size: clamp(1.05rem, 2vw, 1.6rem);
     letter-spacing: 0.1em;
     color: var(--color-text);
-    line-height: 1.2;
+    line-height: 1.25;
+    max-width: 42ch;
 
     span {
       display: block;
-      margin-top: 0.8rem;
+      margin-top: 0.75rem;
       font-family: var(--font-body);
-      font-size: clamp(0.85rem, 1.2vw, 1rem);
+      font-size: clamp(0.88rem, 1.3vw, 1rem);
       font-weight: 300;
       letter-spacing: 0.02em;
       color: var(--color-secondary);
-      line-height: 1.7;
+      line-height: 1.65;
+      max-width: 34ch;
+      margin-inline: auto;
+    }
+
+    @media (max-width: 768px) {
+      margin-top: 0.95rem;
+      max-width: 28ch;
+
+      span {
+        margin-top: 0.6rem;
+        max-width: 26ch;
+      }
     }
   }
 
   // ── BUTTONS ───────────────────────────
   &__btns {
     display: flex;
-    align-items: center;
-    gap: 1.5rem;
-    margin-top: 3rem;
+    align-items: stretch;
+    justify-content: center;
+    gap: clamp(0.75rem, 2vw, 1.5rem);
+    margin-top: clamp(1.5rem, 3.5vw, 3rem);
+    width: 100%;
+    max-width: 520px;
+    min-height: 56px;
+
+    @media (max-width: 768px) {
+      margin-top: 1.45rem;
+      max-width: 420px;
+      padding: 0 0.1rem;
+    }
   }
 
   &__btn {
     font-family: var(--font-heading);
-    font-size: 1rem;
+    font-size: clamp(0.84rem, 1.2vw, 1rem);
     letter-spacing: 0.1em;
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+    text-align: center;
+    text-decoration: none;
+    box-sizing: border-box;
+
+    &--primary,
+    &--secondary {
+      flex: 1 1 0;
+      min-height: 54px;
+      padding: 0.95rem 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1.15;
+    }
 
     &--primary {
       background: var(--color-text);
       color: var(--color-bg);
-      padding: 1rem 2.5rem;
       border: 1px solid var(--color-text);
 
       &:hover {
@@ -156,7 +240,6 @@
     &--secondary {
       background: transparent;
       color: var(--color-text);
-      padding: 1rem 2.5rem;
       border: 1px solid var(--color-text);
 
       &:hover {
@@ -165,32 +248,51 @@
         transform: translateY(-2px);
       }
     }
+
+    @media (max-width: 768px) {
+      &--primary,
+      &--secondary {
+        min-height: 56px;
+        padding: 0.9rem 0.7rem;
+        white-space: normal;
+      }
+    }
+
+    @media (max-width: 360px) {
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+    }
   }
 
   // ── SCROLL HINT ───────────────────────
   &::after {
-    content: 'SCROLL';
+    content: "SCROLL";
     position: absolute;
-    bottom: 2rem;
+    bottom: calc(1.1rem + env(safe-area-inset-bottom));
     left: 50%;
     transform: translateX(-50%);
     font-family: var(--font-heading);
     font-size: 0.7rem;
     letter-spacing: 0.3em;
     color: var(--color-secondary);
-    opacity: 0.6;
-    animation: bounce 2s ease infinite;
+    opacity: 0.55;
+    animation: hero-bounce 2s ease infinite;
+    pointer-events: none;
+
+    @media (max-width: 768px) {
+      bottom: calc(0.8rem + env(safe-area-inset-bottom));
+      opacity: 0.4;
+    }
   }
 }
 
-@keyframes bounce {
+@keyframes hero-bounce {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(6px); }
+}
 
-  0%,
-  100% {
-    transform: translateX(-50%) translateY(0)
-  }
-
-  50% {
-    transform: translateX(-50%) translateY(6px)
+@media (prefers-reduced-motion: reduce) {
+  .hero::after {
+    animation: none;
   }
 }

@@ -14,19 +14,20 @@ const Hero = () => {
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } })
 
     tl
+      .fromTo(headingRef.current.children,
+        { y: 24, opacity: 0.001 },
+        { y: 0, opacity: 1, duration: 0.5, stagger: 0.05 },
+        0
+      )
       .fromTo(vinylRef.current,
         { y: -80, scale: 0.9, rotate: -15 },
-        { y: 0, scale: 1, rotate: 0, duration: 1.2, ease: 'back.out(1.2)' }
-      )
-      .fromTo(headingRef.current.children,
-        { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.7, stagger: 0.08 },
-        '-=0.8'
+        { y: 0, scale: 1, rotate: 0, duration: 1.2, ease: 'back.out(1.2)' },
+        0.1
       )
       .fromTo(subRef.current,
         { y: 16, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.5 },
-        '-=0.35'
+        '-=0.5'
       )
       .fromTo(btnRef.current.children,
         { y: 12, opacity: 0 },

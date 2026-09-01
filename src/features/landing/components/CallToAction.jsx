@@ -17,14 +17,21 @@ const CallToAction = () => {
 
   const audioRef = useRef(null)
 
-  useEffect(() => {
-    audioRef.current = new Audio('/sounds/album-song.mp3')
-    audioRef.current.loop = true
-    audioRef.current.volume = 0.6
+  const getAudio = () => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio('/sounds/album-song.mp3')
+      audioRef.current.loop = true
+      audioRef.current.volume = 0.6
+    }
+    return audioRef.current
+  }
 
+  useEffect(() => {
     return () => {
-      audioRef.current.pause()
-      audioRef.current = null
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current = null
+      }
     }
   }, [])
 
@@ -96,10 +103,15 @@ const CallToAction = () => {
         <div
           className="cta__vinyl-scene"
           ref={sceneRef}
-          onMouseEnter={() => audioRef.current?.play().catch(() => {})}
+          onMouseEnter={() => {
+            const audio = getAudio()
+            audio.play().catch(() => {})
+          }}
           onMouseLeave={() => {
-            audioRef.current?.pause()
-            audioRef.current.currentTime = 0
+            if (audioRef.current) {
+              audioRef.current.pause()
+              audioRef.current.currentTime = 0
+            }
           }}
         >
           <div className="cta__album">

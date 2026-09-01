@@ -16,9 +16,15 @@ function FlowingMenu({
   const audioRef = useRef(null);
   const [activeIdx, setActiveIdx] = useState(null);
 
+  const getAudio = () => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio('/sounds/feature-card.wav');
+      audioRef.current.volume = 0.35;
+    }
+    return audioRef.current;
+  };
+
   useEffect(() => {
-    audioRef.current = new Audio('/sounds/feature-card.wav');
-    audioRef.current.volume = 0.35;
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -28,9 +34,9 @@ function FlowingMenu({
   }, []);
 
   const playSound = () => {
-    if (!audioRef.current) return;
-    audioRef.current.currentTime = 0;
-    audioRef.current.play().catch(() => {});
+    const audio = getAudio();
+    audio.currentTime = 0;
+    audio.play().catch(() => {});
   };
 
   const handleItemActivate = (hoveredIdx) => {
