@@ -1,5 +1,4 @@
 import '../styles/moodslider.responsive.scss'
-import clickSrc from '../../../assets/sounds/hover.wav'
 
 // Pool of 3 instances — rapid hover rotates through them
 // so each sound plays fully without cutting the previous
@@ -9,7 +8,7 @@ let poolIndex = 0
 const getPool = () => {
   if (!audioPool) {
     audioPool = Array.from({ length: 3 }, () => {
-      const audio = new Audio(clickSrc)
+      const audio = new Audio('/sounds/hover.wav')
       audio.volume = 0.35
       return audio
     })

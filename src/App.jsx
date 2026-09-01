@@ -3,7 +3,6 @@ import { routes } from './routes.jsx'
 import { RouterProvider } from 'react-router-dom'
 import { AuthProvider } from './features/auth/auth.context.jsx'
 import { PlayerProvider } from './features/player/context/player.context'
-import hoverSrc from './assets/sounds/click.wav'
 
 const DitherCursor = lazy(() => import('./features/shared/components/DitherCursor'))
 
@@ -14,7 +13,7 @@ let hoverIdx = 0
 const getHoverPool = () => {
   if (!hoverPool) {
     hoverPool = Array.from({ length: 4 }, () => {
-      const a = new Audio(hoverSrc)
+      const a = new Audio('/sounds/click.wav')
       a.volume = 0.2
       return a
     })

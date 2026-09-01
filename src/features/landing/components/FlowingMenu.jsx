@@ -1,6 +1,5 @@
 import { useRef, useEffect, useState, forwardRef } from 'react';
 import { gsap } from 'gsap';
-import hoverSound from '../../../assets/sounds/feature-card.wav';
 import '../styles/FlowingMenu.responsive.scss';
 
 // ─── FlowingMenu Parent ────────────────────────────────────────────────────────
@@ -18,7 +17,7 @@ function FlowingMenu({
   const [activeIdx, setActiveIdx] = useState(null);
 
   useEffect(() => {
-    audioRef.current = new Audio(hoverSound);
+    audioRef.current = new Audio('/sounds/feature-card.wav');
     audioRef.current.volume = 0.35;
     return () => {
       if (audioRef.current) {

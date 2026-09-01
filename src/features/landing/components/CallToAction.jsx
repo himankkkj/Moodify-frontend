@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 import coverImg from '../../../assets/images/cta/cover.webp'
 import vinylImg  from '../../../assets/images/cta/vinyl.webp'
 import '../styles/calltoaction.responsive.scss'
-import albumSong from '../../../assets/sounds/album-song.mp3'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -19,7 +18,7 @@ const CallToAction = () => {
   const audioRef = useRef(null)
 
   useEffect(() => {
-    audioRef.current = new Audio(albumSong)
+    audioRef.current = new Audio('/sounds/album-song.mp3')
     audioRef.current.loop = true
     audioRef.current.volume = 0.6
 

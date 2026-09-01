@@ -12,7 +12,6 @@ import step2_1400 from '../../../assets/images/howitworks/step2-1400.webp'
 import step3_800 from '../../../assets/images/howitworks/step3-800.webp'
 import step3_1100 from '../../../assets/images/howitworks/step3-1100.webp'
 import step3_1400 from '../../../assets/images/howitworks/step3-1400.webp'
-import flipSoundSrc from '../../../assets/sounds/page-flip.wav'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -135,7 +134,7 @@ const HowItWorks = () => {
     // ── PLAY PAGE FLIP SOUND ─────────────────
     if (prevStepRef.current !== -1 && prevStepRef.current !== i && audioUnlockedRef.current) {
       if (!audioRef.current) {
-        audioRef.current = new Audio(flipSoundSrc)
+        audioRef.current = new Audio('/sounds/page-flip.wav')
         audioRef.current.volume = 0.4
       }
       audioRef.current.currentTime = 0
